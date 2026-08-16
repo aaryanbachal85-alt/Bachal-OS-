@@ -15,23 +15,30 @@
     <!-- Desktop Icons -->
     <div id="desktopApps" style="padding-top: 64px; padding-left: 16px; display: flex; flex-direction: column; gap: 8px;">
       <div id="portfolioIcon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: 120px; cursor: pointer;">
-        <img src="nuke.jpg" alt="App Icon" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 8px;">
+        <img src="pictures/nuke.jpg" alt="App Icon" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 8px;">
         <p style="margin: 0px; color: aquamarine;">Bachal's Portfolio</p>
       </div>
 
       <div id="travelIcon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: 120px; cursor: pointer;">
-        <img src="travel.jpg" alt="Travel Icon" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 8px;">
+        <img src="pictures/travel.jpg" alt="Travel Icon" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 8px;">
         <p style="margin: 0px; color: #fff;">Bachal's Travel Bucket</p>
       </div>
 
       <div id="badmintonIcon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: 120px; cursor: pointer;">
-        <img src="badminton.jpg" alt="Badminton Icon" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 8px;">
+        <img src="pictures/badminton.jpg" alt="Badminton Icon" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 8px;">
         <p style="margin: 0px; color: #fff;">Bachal's Badminton Videos</p>
+      </div>
+
+      <div id="wallpaperIcon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: 120px; cursor: pointer;">
+        <div style="width: 48px; height: 48px; border-radius: 8px; margin: 0 auto 8px auto; background: linear-gradient(135deg, #ff7e57, #feb47b); display: flex; align-items: center; justify-content: center; font-size: 24px;">
+          🖼️
+        </div>
+        <p style="margin: 0px; color: #fff;">Bachal's Wallpapers</p>
       </div>
     </div>
 
     <!-- Welcome Window -->
-    <div id="welcome" style="position: absolute; top: calc(50% - 200px); left: calc(50% - 200px); width: 400px; border: solid; border-radius: 16px; padding: 16px; background-color: black; border-color: antiquewhite; text-align: center; display: flex; flex-direction: column;">
+    <div id="welcome" style="position: absolute; top: calc(50% - 200px); left: calc(50% - 200px); width: 500px; border: solid; border-radius: 16px; padding: 16px; background-color: black; border-color: antiquewhite; text-align: center; display: flex; flex-direction: column;">
       <p id="welcomeheader" style="user-select: none; cursor: grab; color: rgba(255, 255, 255, 0.911); margin: 0;">Handle</p>
       <p id="welcomeclose" style="cursor: pointer; color: white; background-color: red; border-radius: 50%; width: 16px; height: 16px; display: inline-block; text-align: center; line-height: 16px; margin: 0 0 12px 0;">X</p>
 
@@ -102,6 +109,21 @@
         <div id="badmintonSidebar" style="width: 200px; margin-right: 16px; overflow-y: auto; border-right: 1px solid #555; padding-right: 8px;"></div>
         <div id="badmintonContent" style="flex: 1; overflow-y: auto;">
           <p>Select a video to watch it</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wallpaper Window -->
+    <div class="window" id="wallpaper" style="top: calc(50% - 300px); left: calc(50% - 475px); display: none; width: 950px; height: 600px;">
+      <div class="windowheader" id="wallpaperheader">
+        <div class="closebutton" id="wallpaperclose"></div>
+        <p style="color: white; margin: 0;">Bachal's Wallpapers</p>
+      </div>
+
+      <div style="color: white; margin: 16px; background-color: #1a1919; border-radius: 12px; padding: 16px; height: 520px; display: flex; flex-direction: row;">
+        <div id="wallpaperSidebar" style="width: 200px; margin-right: 16px; overflow-y: auto; border-right: 1px solid #444; padding-right: 8px;"></div>
+        <div id="wallpaperContent" style="flex: 1; overflow-y: auto; padding-left: 8px;">
+          <p>Select a category to explore wallpapers!</p>
         </div>
       </div>
     </div>

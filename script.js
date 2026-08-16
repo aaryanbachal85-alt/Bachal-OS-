@@ -165,9 +165,9 @@ var travelDestinations = [
     continent: "Europe",
     content: `
       <h2 style="margin-top: 0;">🇨🇭 Switzerland</h2>
-      <img src="switzerland1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="switzerland2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="switzerland3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/switzerland1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/switzerland2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/switzerland3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
       <p>Home to the Swiss Alps and the Matterhorn, Switzerland is famous for dramatic mountain scenery and crystal-clear lakes. Scenic train rides and world-class chocolate make it a dream destination.</p>
     `
   },
@@ -176,9 +176,9 @@ var travelDestinations = [
     continent: "Europe",
     content: `
       <h2 style="margin-top: 0;">🇮🇸 Iceland</h2>
-      <img src="iceland1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="iceland2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="iceland3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/iceland1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/iceland2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/iceland3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
       <p>The land of fire and ice, where glaciers, volcanoes, and hot springs sit side by side. Waterfalls like Skógafoss and the Northern Lights make it one of the most otherworldly places on Earth.</p>
     `
   },
@@ -187,9 +187,9 @@ var travelDestinations = [
     continent: "Asia",
     content: `
       <h2 style="margin-top: 0;">🇯🇵 Japan</h2>
-      <img src="japan1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="japan2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="japan3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/japan1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/japan2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/japan3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
       <p>Ancient temples and traditions blend with futuristic neon cities. From Kyoto's cherry blossoms to the busy streets of Tokyo, there's something new around every corner.</p>
     `
   },
@@ -198,9 +198,9 @@ var travelDestinations = [
     continent: "Europe",
     content: `
       <h2 style="margin-top: 0;">🇳🇴 Norway</h2>
-      <img src="norway1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="norway2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="norway3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/norway1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/norway2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/norway3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
       <p>Deep fjords and towering mountains create some of the most dramatic coastline on Earth. The midnight sun in summer and the Northern Lights in winter make it unforgettable.</p>
     `
   },
@@ -209,9 +209,9 @@ var travelDestinations = [
     continent: "North America",
     content: `
       <h2 style="margin-top: 0;">🇨🇦 Canada</h2>
-      <img src="canada1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="canada2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="canada3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/canada1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/canada2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/canada3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
       <p>Home to stunning national parks like Banff with its turquoise lakes and the Rocky Mountains. Niagara Falls and the city of Vancouver round out an incredibly diverse country.</p>
     `
   },
@@ -220,9 +220,9 @@ var travelDestinations = [
     continent: "Europe",
     content: `
       <h2 style="margin-top: 0;">🇮🇹 Italy</h2>
-      <img src="italy1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="italy2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
-      <img src="italy3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/italy1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/italy2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="pictures/italy3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
       <p>Packed with history, from the Colosseum in Rome to the canals of Venice. Add the rolling hills of Tuscany and incredible food, and it's easy to see why it's a top destination.</p>
     `
   }
@@ -286,7 +286,7 @@ var badmintonlist = [
       <video src="Match1.mp4" style="width:100%; border-radius: 12px;" controls></video>
       <p>Anirud vs Bachal Match 1. Bachal Wins.</p>
     `
-  }, 
+  },
   {
     name: "Match 2",
     date: "8/5/26",
@@ -297,8 +297,8 @@ var badmintonlist = [
     `
   },
   {
-    name: "Match 3", 
-    date: "8/5/26", 
+    name: "Match 3",
+    date: "8/5/26",
     content: `
       <h2 style="margin-top: 0;">Match 3</h2>
       <video src="Match3.mp4" style="width:100%; border-radius: 12px;" controls></video>
@@ -351,3 +351,183 @@ initializeWindow("badminton");
 initializeIcon("badmintonIcon", "badminton");
 
 
+
+/* ========== BACHAL'S WALLPAPER APP ========== */
+
+function setOSWallpaper(url) {
+  document.body.style.backgroundImage = `url('${url}')`;
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  localStorage.setItem("bachal_os_wallpaper", url);
+}
+
+// Check if user already picked a custom wallpaper
+var savedBg = localStorage.getItem("bachal_os_wallpaper");
+if (savedBg) {
+  setOSWallpaper(savedBg);
+}
+
+// Wallpaper Categories
+var wallpaperCategories = [
+  {
+    category: "🏔️ Nature & Mountains",
+    description: "Breathtaking landscapes from Switzerland, Norway, and Iceland",
+    wallpapers: [
+      { name: "Swiss Alps Classic", url: "https://www.ourescapeclause.com/wp-content/uploads/2022/11/shutterstock_1464930743-scaled.jpg" },
+      { name: "Norwegian Fjords", url: "https://images.unsplash.com/photo-1507272931001-fc06c17e4f43?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Banff Canadian Rockies", url: "https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Dolomites Italy", url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Iceland Waterfall", url: "https://images.unsplash.com/photo-1489440543286-a69330151c0b?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Mount Fuji Sunrise", url: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Matterhorn Peak", url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Misty Alpine Forest", url: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80" }
+    ]
+  },
+  {
+    category: "🚀 Space & Aerospace",
+    description: "Rockets, fighter jets, galaxies, and deep space exploration",
+    wallpapers: [
+      { name: "Deep Space Nebula", url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Rocket Launch", url: "https://images.unsplash.com/photo-1517976487507-5b38f711a916?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Jet in Flight", url: "https://images.unsplash.com/photo-1519074069444-1ba4fff16def?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Milky Way Galaxy", url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Aurora Borealis", url: "https://images.unsplash.com/photo-1531366936333-7c912a4589a7?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Earth from Orbit", url: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Apollo Moon Surface", url: "https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Space Shuttle Ascent", url: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=1920&q=80" }
+    ]
+  },
+  {
+    category: "🌃 Neon & Cyberpunk",
+    description: "Futuristic neon cities, rainy streets, and glowing skylines",
+    wallpapers: [
+      { name: "Tokyo Rainy Night", url: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Cyberpunk Alley", url: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Futuristic Horizon", url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Shinjuku Crossing", url: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Synthwave Highway", url: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Hong Kong Cyber City", url: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Neon Arcade", url: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Purple Neon Street", url: "https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1920&q=80" }
+    ]
+  },
+  {
+    category: "🎨 Minimal & Aesthetic",
+    description: "Clean gradients, dark dunes, and calming Japanese aesthetics",
+    wallpapers: [
+      { name: "Dark Velvet Dunes", url: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Kyoto Temple Garden", url: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Moody Fog Lake", url: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Sunset Gradient", url: "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Cosmic Wave Gradient", url: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Golden Sunset Coast", url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Cyber Matrix Grid", url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1920&q=80" }
+    ]
+  },
+  {
+    category: "✨ Custom / Reset",
+    description: "Paste your own image link or reset to default",
+    isCustom: true
+  }
+];
+
+// SideBar Elements
+var wallpaperSidebar = document.querySelector("#wallpaperSidebar");
+var wallpaperContent = document.querySelector("#wallpaperContent");
+
+// Sidebar Instruction
+var wpInstructions = document.createElement("div");
+wpInstructions.innerHTML = `
+  <p style="margin: 0px; font-weight: bold;">🖼️ Categories</p>
+  <p style="font-size: 12px; margin: 0px; opacity: 0.6; margin-bottom: 8px;">Tap a category below</p>
+`;
+wallpaperSidebar.appendChild(wpInstructions);
+
+// Default Message
+wallpaperContent.innerHTML = `
+  <h2 style="margin-top: 0;">Bachal's Wallpapers</h2>
+  <p>Select a category from the sidebar to choose your custom desktop background!</p>
+`;
+
+// Shows a category in the viewer
+function setWallpaperContent(index) {
+  var cat = wallpaperCategories[index];
+
+  if (cat.isCustom) {
+    wallpaperContent.innerHTML = `
+      <h2 style="margin-top: 0;">✨ Custom Wallpaper</h2>
+      <p style="opacity: 0.8;">Paste any image link from the internet below:</p>
+      <div style="display: flex; gap: 8px; margin-top: 12px; margin-bottom: 16px;">
+        <input id="customUrlInput" type="text" placeholder="https://example.com/image.jpg" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #555; background: #252525; color: white;" />
+        <button id="applyCustomBtn" style="padding: 10px 18px; border-radius: 8px; background: aquamarine; color: black; font-weight: bold; border: none; cursor: pointer;">Apply</button>
+      </div>
+      <button id="resetWallpaperBtn" style="padding: 10px 14px; border-radius: 8px; background: #ff5f57; color: white; border: none; cursor: pointer; font-weight: bold;">Reset to Default Wallpaper</button>
+    `;
+
+    document.querySelector("#applyCustomBtn").addEventListener("click", function () {
+      var url = document.querySelector("#customUrlInput").value.trim();
+      if (url) {
+        setOSWallpaper(url);
+        alert("Wallpaper updated!");
+      }
+    });
+
+    document.querySelector("#resetWallpaperBtn").addEventListener("click", function () {
+      setOSWallpaper("https://www.ourescapeclause.com/wp-content/uploads/2022/11/shutterstock_1464930743-scaled.jpg");
+      alert("Reset to default wallpaper!");
+    });
+    return;
+  }
+
+  // Built grid of wallpapers
+  var html = `
+    <h2 style="margin-top: 0;">${cat.category}</h2>
+    <p style="opacity: 0.7; margin-bottom: 16px;">${cat.description}</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px;">
+  `;
+
+  for (let i = 0; i < cat.wallpapers.length; i++) {
+    var wp = cat.wallpapers[i];
+    html += `
+      <div class="wpCard" data-url="${wp.url}" style="background: #252525; border-radius: 10px; padding: 8px; cursor: pointer; border: 1px solid #444; text-align: center; transition: 0.2s;">
+        <img src="${wp.url}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 6px;" />
+        <p style="margin: 4px 0 0 0; font-size: 12px; font-weight: bold;">${wp.name}</p>
+      </div>
+    `;
+  }
+  html += `</div>`;
+  wallpaperContent.innerHTML = html;
+
+  // Click card to set wallpaper
+  var cards = wallpaperContent.querySelectorAll(".wpCard");
+  cards.forEach(function (card) {
+    card.addEventListener("click", function () {
+      var url = this.getAttribute("data-url");
+      setOSWallpaper(url);
+    });
+  });
+}
+
+// Adds one clickable category item to the sidebar
+function addToWallpapersidebar(index) {
+  var cat = wallpaperCategories[index];
+  var newDiv = document.createElement("div");
+  newDiv.className = "sidebarItem";
+  newDiv.style.padding = "8px";
+  newDiv.style.borderRadius = "8px";
+  newDiv.style.cursor = "pointer";
+  newDiv.innerHTML = `
+    <p style="margin: 0px;">${cat.category}</p>
+  `;
+  newDiv.addEventListener("click", function () {
+    setWallpaperContent(index);
+  });
+  wallpaperSidebar.appendChild(newDiv);
+}
+
+for (let i = 0; i < wallpaperCategories.length; i++) {
+  addToWallpapersidebar(i);
+}
+
+initializeWindow("wallpaper");
+initializeIcon("wallpaperIcon", "wallpaper");
