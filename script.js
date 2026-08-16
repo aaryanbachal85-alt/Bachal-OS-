@@ -383,15 +383,15 @@ var wallpaperCategories = [
       { name: "Misty Alpine Forest", url: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80" }
     ]
   },
-  {
+    {
     category: "🚀 Space & Aerospace",
     description: "Rockets, fighter jets, galaxies, and deep space exploration",
     wallpapers: [
       { name: "Deep Space Nebula", url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80" },
-      { name: "Rocket Launch", url: "https://images.unsplash.com/photo-1517976487507-5b38f711a916?auto=format&fit=crop&w=1920&q=80" },
-      { name: "Jet in Flight", url: "https://images.unsplash.com/photo-1519074069444-1ba4fff16def?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Rocket Launch", url: "https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Jet in Flight", url: "https://images.unsplash.com/photo-1520437358207-323b43b50729?auto=format&fit=crop&w=1920&q=80" },
       { name: "Milky Way Galaxy", url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1920&q=80" },
-      { name: "Aurora Borealis", url: "https://images.unsplash.com/photo-1531366936333-7c912a4589a7?auto=format&fit=crop&w=1920&q=80" },
+      { name: "Aurora Borealis", url: "https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=1920&q=80" },
       { name: "Earth from Orbit", url: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1920&q=80" },
       { name: "Apollo Moon Surface", url: "https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?auto=format&fit=crop&w=1920&q=80" },
       { name: "Space Shuttle Ascent", url: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=1920&q=80" }
