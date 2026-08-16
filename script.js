@@ -1,4 +1,6 @@
-// Update the time every second
+/* ========== CLOCK ========== */
+
+// Updates the clock text every second
 function updateTime() {
   var currentTime = new Date().toLocaleString();
   var timeText = document.querySelector("#timeElement");
@@ -6,74 +8,64 @@ function updateTime() {
 }
 setInterval(updateTime, 1000);
 
-// Make the DIV element draggable:
+/* ========== DRAGGABLE WINDOWS ========== */
+
 dragElement(document.getElementById("welcome"));
 
-// Step 1: Define a function called `dragElement` that makes an HTML element draggable.
+// Makes any element draggable
 function dragElement(element) {
-  // Step 2: Set up variables to keep track of the element's position.
   var initialX = 0;
   var initialY = 0;
   var currentX = 0;
   var currentY = 0;
 
-  // Step 3: Check if there is a special header element associated with the draggable element.
+  // Drag by the header if it exists, else drag by whole element
   if (document.getElementById(element.id + "header")) {
-    // Step 4: If present, assign the `dragMouseDown` function to the header's `onmousedown` event.
-    // This allows you to drag the window around by its header.
     document.getElementById(element.id + "header").onmousedown = startDragging;
   } else {
-    // Step 5: If not present, assign the function directly to the draggable element's `onmousedown` event.
-    // This allows you to drag the window by holding down anywhere on the window.
     element.onmousedown = startDragging;
   }
 
-  // Step 6: Define the `startDragging` function to capture the initial mouse position and set up event listeners.
+  // Record start position + attach move/stop listeners
   function startDragging(e) {
     e = e || window.event;
     e.preventDefault();
-    // Step 7: Get the mouse cursor position at startup.
     initialX = e.clientX;
     initialY = e.clientY;
-    // Step 8: Set up event listeners for mouse movement (`elementDrag`) and mouse button release (`closeDragElement`).
     document.onmouseup = stopDragging;
     document.onmousemove = dragElement;
   }
 
-  // Step 9: Define the `elementDrag` function to calculate the new position of the element based on mouse movement.
+  // Move the element by how much the mouse moved
   function dragElement(e) {
     e = e || window.event;
     e.preventDefault();
-    // Step 10: Calculate the new cursor position.
     currentX = initialX - e.clientX;
     currentY = initialY - e.clientY;
     initialX = e.clientX;
     initialY = e.clientY;
-    // Step 11: Update the element's new position by modifying its `top` and `left` CSS properties.
     element.style.top = (element.offsetTop - currentY) + "px";
     element.style.left = (element.offsetLeft - currentX) + "px";
   }
 
-  // Step 12: Define the `stopDragging` function to stop tracking mouse movement by removing the event listeners.
+  // Stop dragging on mouse release
   function stopDragging() {
     document.onmouseup = null;
     document.onmousemove = null;
   }
 }
 
-var welcomeScreen = document.querySelector("#welcome")
+/* ========== OPEN / CLOSE WINDOWS ========== */
 
+var welcomeScreen = document.querySelector("#welcome");
+
+// Hides a window
 function closeWindow(element) {
-  element.style.display = "none"
+  element.style.display = "none";
 }
 
-function openWindow(element) {
-  element.style.display = "flex"
-}
-
-var welcomeScreenClose = document.querySelector("#welcomeclose")
-
-var welcomeScreenOpen = document.querySelector("#welcomeopen")
+var welcomeScreenClose = document.querySelector("#welcomeclose");
+var welcomeScreenOpen = document.querySelector("#welcomeopen");
 
 welcomeScreenClose.addEventListener("click", function() {
   closeWindow(welcomeScreen);
@@ -83,45 +75,279 @@ welcomeScreenOpen.addEventListener("click", function() {
   openWindow(welcomeScreen);
 });
 
-var selectedIcon = undefined; 
+/* ========== PART 4: WINDOW MANAGER ==========
+   Gives every window: drag, close, open, rise-to-top.
+   Gives every icon: tap to open/close. */
 
-function selectIcon(element) {
-    element.classList.add("selected");
-    selectedIcon = element 
-} 
-
-dragElement(document.querySelector("#portfolio"))
-
-var portfolioScreen = document.querySelector("#portfolio")
-
-var portfolioScreenClose = document.querySelector("#portfolioclose") 
-
-portfolioScreenClose.addEventListener("click", function() {
-    closeWindow(portfolioScreen);
-});
-
-var portfolioIcon = document.querySelector("#desktopApps div")
-
-portfolioIcon.addEventListener("click", function() {
-    openWindow(portfolioScreen);
-});
-
+var selectedIcon = undefined;
 var biggestIndex = 1;
+var topBar = document.querySelector("#top");
 
+// Highlights an icon + remembers it
+function selectIcon(element) {
+  element.classList.add("selected");
+  selectedIcon = element;
+}
+
+// Un-highlights an icon
+function deselectIcon(element) {
+  if (element) {
+    element.classList.remove("selected");
+  }
+  selectedIcon = undefined;
+}
+
+// Tap icon = open app, tap again = close app
+function handleIconTap(element, screen) {
+  if (element.classList.contains("selected")) {
+    closeWindow(screen);
+    deselectIcon(element);
+  } else {
+    selectIcon(element);
+    openWindow(screen);
+  }
+}
+
+// Shows window + brings to top + keeps top bar on top
+function openWindow(element) {
+  element.style.display = "flex";
+  biggestIndex++;
+  element.style.zIndex = biggestIndex;
+  topBar.style.zIndex = biggestIndex + 1;
+}
+
+// Tapping a window raises it to the top
 function addWindowTapHandling(element) {
-    element.addEventListener("mousedown", () =>
-        handleWindowTap(element) 
-    )
+  element.addEventListener("mousedown", () =>
+    handleWindowTap(element)
+  );
 }
 
 function handleWindowTap(element) {
-    biggestIndex++; 
-    element.style.zIndex = biggestIndex
+  biggestIndex++;
+  element.style.zIndex = biggestIndex;
+  topBar.style.zIndex = biggestIndex + 1;
+  deselectIcon(selectedIcon);
 }
 
-function openWindow(element) {
-    element.style.display = "flex";
-    biggestIndex++; 
-    element.style.zIndex = biggestIndex 
+// Fully sets up a window: drag + close button + rise to top
+function initializeWindow(id) {
+  var screen = document.querySelector("#" + id);
+  dragElement(screen);
+  document.querySelector("#" + id + "close").addEventListener("click", function() {
+    closeWindow(screen);
+  });
+  addWindowTapHandling(screen);
 }
+
+// Fully sets up a desktop icon: tap to open/close its window
+function initializeIcon(id, screenId) {
+  var icon = document.querySelector("#" + id);
+  var screen = document.querySelector("#" + screenId);
+  icon.addEventListener("click", function() {
+    handleIconTap(icon, screen);
+  });
+}
+
+// === SET UP EVERY WINDOW + ICON HERE ===
+addWindowTapHandling(welcomeScreen);
+initializeWindow("portfolio");
+initializeIcon("portfolioIcon", "portfolio");
+initializeWindow("travel");
+initializeIcon("travelIcon", "travel");
+
+/* ========== PART 5: TRAVEL BUCKET LIST APP ==========
+   Template for future apps: data array + sidebar + viewer. */
+
+var travelDestinations = [
+  {
+    name: "Switzerland",
+    continent: "Europe",
+    content: `
+      <h2 style="margin-top: 0;">🇨🇭 Switzerland</h2>
+      <img src="switzerland1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="switzerland2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="switzerland3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <p>Home to the Swiss Alps and the Matterhorn, Switzerland is famous for dramatic mountain scenery and crystal-clear lakes. Scenic train rides and world-class chocolate make it a dream destination.</p>
+    `
+  },
+  {
+    name: "Iceland",
+    continent: "Europe",
+    content: `
+      <h2 style="margin-top: 0;">🇮🇸 Iceland</h2>
+      <img src="iceland1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="iceland2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="iceland3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <p>The land of fire and ice, where glaciers, volcanoes, and hot springs sit side by side. Waterfalls like Skógafoss and the Northern Lights make it one of the most otherworldly places on Earth.</p>
+    `
+  },
+  {
+    name: "Japan",
+    continent: "Asia",
+    content: `
+      <h2 style="margin-top: 0;">🇯🇵 Japan</h2>
+      <img src="japan1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="japan2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="japan3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <p>Ancient temples and traditions blend with futuristic neon cities. From Kyoto's cherry blossoms to the busy streets of Tokyo, there's something new around every corner.</p>
+    `
+  },
+  {
+    name: "Norway",
+    continent: "Europe",
+    content: `
+      <h2 style="margin-top: 0;">🇳🇴 Norway</h2>
+      <img src="norway1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="norway2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="norway3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <p>Deep fjords and towering mountains create some of the most dramatic coastline on Earth. The midnight sun in summer and the Northern Lights in winter make it unforgettable.</p>
+    `
+  },
+  {
+    name: "Canada",
+    continent: "North America",
+    content: `
+      <h2 style="margin-top: 0;">🇨🇦 Canada</h2>
+      <img src="canada1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="canada2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="canada3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <p>Home to stunning national parks like Banff with its turquoise lakes and the Rocky Mountains. Niagara Falls and the city of Vancouver round out an incredibly diverse country.</p>
+    `
+  },
+  {
+    name: "Italy",
+    continent: "Europe",
+    content: `
+      <h2 style="margin-top: 0;">🇮🇹 Italy</h2>
+      <img src="italy1.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="italy2.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <img src="italy3.png" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
+      <p>Packed with history, from the Colosseum in Rome to the canals of Venice. Add the rolling hills of Tuscany and incredible food, and it's easy to see why it's a top destination.</p>
+    `
+  }
+];
+
+var travelSidebar = document.querySelector("#travelSidebar");
+var travelContent = document.querySelector("#travelContent");
+
+// Sidebar instruction text
+var instructions = document.createElement("div");
+instructions.innerHTML = `
+  <p style="margin: 0px; font-weight: bold;">🌍 Select a country</p>
+  <p style="font-size: 12px; margin: 0px; opacity: 0.6; margin-bottom: 8px;">Tap a destination below</p>
+`;
+travelSidebar.appendChild(instructions);
+
+// Default viewer message before anything is clicked
+travelContent.innerHTML = `
+  <h2 style="margin-top: 0;">🌍 Bachal's Travel Bucket</h2>
+  <p>Select a country from the sidebar to see photos and a description!</p>
+`;
+
+// Adds one clickable item to the sidebar
+function addToSideBar(index) {
+  var destination = travelDestinations[index];
+  var newDiv = document.createElement("div");
+  newDiv.className = "sidebarItem";
+  newDiv.style.padding = "8px";
+  newDiv.style.borderRadius = "8px";
+  newDiv.style.cursor = "pointer";
+  newDiv.innerHTML = `
+    <p style="margin: 0px;">${destination.name}</p>
+    <p style="font-size: 12px; margin: 0px; opacity: 0.6;">${destination.continent}</p>
+  `;
+  // Click = show this destination
+  newDiv.addEventListener("click", function() {
+    setTravelContent(index);
+  });
+  travelSidebar.appendChild(newDiv);
+}
+
+// Shows a destination in the viewer
+function setTravelContent(index) {
+  var destination = travelDestinations[index];
+  travelContent.innerHTML = destination.content;
+}
+
+// One sidebar item per destination
+for (let i = 0; i < travelDestinations.length; i++) {
+  addToSideBar(i);
+}
+
+// Badminton Video App
+
+var badmintonlist = [
+  {
+    name: "Match 1",
+    date: "8/5/26",
+    content: `
+      <h2 style="margin-top: 0;">Match 1</h2>
+      <video src="Match1.mp4" style="width:100%; border-radius: 12px;" controls></video>
+      <p>Anirud vs Bachal Match 1. Bachal Wins.</p>
+    `
+  }, 
+  {
+    name: "Match 2",
+    date: "8/5/26",
+    content: `
+      <h2 style="margin-top: 0;">Match 2</h2>
+      <video src="Match2.mp4" style="width:100%; border-radius: 12px;" controls></video>
+      <p>Anirud vs Bachal Match 2. Anirud Wins.</p>
+    `
+  },
+  {
+    name: "Match 3", 
+    date: "8/5/26", 
+    content: `
+      <h2 style="margin-top: 0;">Match 3</h2>
+      <video src="Match3.mp4" style="width:100%; border-radius: 12px;" controls></video>
+      <p>Final Match Anirud vs Bachal. Bachal Wins the Set 2-1.</p>
+    `
+  }
+];
+
+// SideBar
+var badmintonSidebar = document.querySelector("#badmintonSidebar");
+var badmintonContent = document.querySelector("#badmintonContent");
+
+// Sidebar Instrucution text
+var badmintonInstructions = document.createElement("div");
+badmintonInstructions.innerHTML = `
+  <p style="margin: 0px; font-weight: bold;">🏸 Select a match</p>
+  <p style="margin: 0px; opacity: 0.6; margin-bottom: 8px;">Tap a video below</p>
+`;
+badmintonSidebar.appendChild(badmintonInstructions)
+
+// Default Message before anything is clicked
+badmintonContent.innerHTML = `
+  <h2 style="margin-top: 0;">Bachal's Matches</h2>
+  <p>Tap on an event on the left to watch the video!</p>
+`;
+
+// Adds one clickable item to the sidebar
+function addToBadmintonSidebar(index) {
+  var match = badmintonlist[index];
+  var newDiv = document.createElement("div");
+  newDiv.className = "sidebarItem";
+  newDiv.style.padding = "8px";
+  newDiv.style.borderRadius = "8px";
+  newDiv.style.cursor = "pointer";
+  newDiv.innerHTML = `
+    <p style="margin: 0px;">${match.name}</p>
+    <p style="font-size: 12px; margin: 0px; opacity: 0.6;">${match.date}</p>
+  `;
+  newDiv.addEventListener("click", function () {
+    badmintonContent.innerHTML = match.content;
+  });
+  badmintonSidebar.appendChild(newDiv);
+}
+
+for (let i = 0; i < badmintonlist.length; i++) {
+  addToBadmintonSidebar(i);
+}
+
+initializeWindow("badminton");
+initializeIcon("badmintonIcon", "badminton");
+
 

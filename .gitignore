@@ -1,0 +1,13 @@
+# Video files (exceed GitHub's 100MB file limit)
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Environment variables
+.env
+.env.local
+
+# OS generated files
+.DS_Store
+Thumbs.db
