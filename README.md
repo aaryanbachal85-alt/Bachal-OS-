@@ -1,5 +1,5 @@
 # Bachal-OS- 
-Welcome to Bachal's OS, a personal web-based desktop operating system built for the Hack Club WebOS Jam. Bachal-OS recreates a modern, interactive desktop experience directly inside your web browser using html, css and javascript.
+Welcome to Bachal's OS, a personal web-based desktop operating system built for the Hack Club WebOS Jam. Bachal's OS gives you a short about me kind of thing where you can learn his hobbies, and his dreams in life. 
 
 ## 🌐 Demo Link
 Live Demo Website: https://aaryanbachal85-alt.github.io/Bachal-OS-/
@@ -8,39 +8,39 @@ Live Demo Website: https://aaryanbachal85-alt.github.io/Bachal-OS-/
 ## ✨ Features & Built-in Apps
 
 ### 🕒 1. System Bar & Live Clock
-**Live Clock**: Displays the current real-time and date in the top right corner, updating dynamically every second.
-**Frosted Glass Top Bar**: Translucent glassmorphise bar with a quick-access handle to reopen the Welcome screen anytime by clicking the "Bachal's Os" tag in the top left corner of the screen. 
+**Live Clock**: Shows the time in the top right corner and updates every second.
+**Frosted Glass Top Bar**: A top bar that displays the time in the top-left corner. In the top right you can reopen the welcome screen by just clicking "Bachal's OS".
 
 ### 🪟 2. Window Manager & Desktop System
-**Draggable Windows**: Grab any window header to drag and reposition windows across your screen.
-**Focus & Layering**: (Z-Index Rise): *Clicking any window or its icon automatically brings it to the top layer. 
-**Desktop Icons**: Click an icon to open its window; click again to close it
-**Close Buttons**: Dedicated red close buttons on every window
+**Draggable Windows**: Click the header and drag apps across your screen.
+**Focus & Layering**: Clicking an icon opens an app above all the other layers.
+**Desktop Icons**: You can click an icon and it opens the window automatically. To close it you can just click the icon again or just click the close button.
+**Close Buttons**: Every app/window has a red close button. 
 
 ### 👤 3. Welcome Screen
-* An introductory modal featuring Bachal's profile photo, high school sophomore background, hobbies (percussion, badminton, coding), and Instagram link.
+* Shows Bachal's Photo, a short description of his hobbies and a link on the bottom to his Instagram account.
 
 ### 🚀 4. Bachal's Portfolio App
-**About Me & Goals**: Highlights Bachal's aspiration to study Aerospace Engineering and design innovative aircraft.
-**Favorites & Hobbies**: Displays favorite subjects and person interests.
+**About Me & Goals**: Tells Bachal's dream job and what he wants to do when he grows up.
+**Favorites & Hobbies**: Tells Bachal's favorite subjects and what he likes to do.
 
 ### 🌍 5. Bachal's Travel Bucket List App
-**Interactive Sidebar**: Browse Bachal's dream destinations across Europe, Asia, and North America.
-**Photo Galleries & Insights**: Dynamic photo viewer showcasing alpine peaks, waterfalls, fjords, and historic landmakrs.
+**Interactive Sidebar**: Learn about Bachal's dream countries to travel to later in life.
+**Photo Galleries & Insights**: 3 photos per country to see + a 2-3 sentence description on the country itself. 
 
 ### 🏸 6. Bachal's Badminton Match Viewer
-* An interactive match player showcasing videos and match outcomes from Bachal's badminton games.
+* Able to watch videos of Bachal playing Badminton games including outcomes.
 
-### 🖼️ 7. Bachal's Wallpapers App (New Custom Feature)
+### 🖼️ 7. Bachal's Wallpapers App (Feature not listed in the Guide)
 > **Note:** *Bachal's Wallpapers app was designed and developed with the assistance of AI due to lack of js experience.*
-* **Curated Wallpaper Collections:** High-definition wallpapers organized into categories:
+* **Curated Wallpaper Collections:** A collection of wallpapers that I chose seperated into different categories.
     🏔️ **Nature & Mountains**: (Swiss Alps, Norwegian Fjords, Dolomites, Lake Banff, Mount Fuji)
     🚀**Space & Aerospace**: (Nebulas, Rocket Launches, Fighter Jets, Apollo Moon Landing, Shuttles)    
     🌃**Neon & Cyberpunk**: (Tokyo Rainy Nights, Synthwave Highways, Cyber Alleyways)
     🎨**Minimal & Aesthetic**: (Velvet Dunes, Moody Lakes, Kyoto Gardens, Cosmic Gradients)
-**Custom URL Input**: Paste any direct image link from the internet to set your own custom desktop wallpaer. Right-click the image and click "Copy Image Link"
-**Reset Button**: One-click button to revert back to the default Swiss Alps background.
-**Persistent User Storage** (`localStorage`): Every visitor's wallpaper selection is saved locally in their browser so their custom background is remembered every time they return
+**Custom URL Input**: You can choose your own wallpaper by just copying the direct link and pasting in the custom wallpaper section. Right-click the image and click "Copy Image Link"
+**Reset Button**: You can revert back to the default background when you first opened the OS.
+**Persistent User Storage** (`localStorage`): Every visitor's wallpaper is stored in their browser so it doesn't reset when they return.
 
 ## 🛠️ Tech Stack
 * **HTML5:** Semantic markup, video tags, and window layouts.
