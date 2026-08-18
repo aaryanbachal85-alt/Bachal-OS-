@@ -20,7 +20,6 @@ Learn a little bit about Bachal's background including his dreams, hobbies, and 
 Watch Bachal play badminton matches included with details of the outcome of the match
 
 ## 4. Wallpaper app
-*Note: This was developed with the assist of **AI** due to the lack of experience in javascript*
 You can change the background of the OS if you don't want to. We have a mountain, neon/urban, minimal, and aerospace category from a set of wallpapers to choose from. If you don't like any of them you can just paste the direct image link of something you like on the internet and that works as well. 
 
 ---
