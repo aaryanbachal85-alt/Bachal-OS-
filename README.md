@@ -7,46 +7,21 @@ Live Demo Website: https://aaryanbachal85-alt.github.io/Bachal-OS-/
 
 ## ✨ Features & Built-in Apps
 
-### 🕒 1. System Bar & Live Clock
-**Live Clock**: Shows the time in the top right corner and updates every second.
-**Frosted Glass Top Bar**: A top bar that displays the time in the top-left corner. In the top right you can reopen the welcome screen by just clicking "Bachal's OS".
+## 1: The System
+- Draggable Windows
+- Time Display in the Top Right
+- In the top right click "Bachal's OS" to be able to reopen the window screen
+- Open an app by clicking on the icon and close it by clicking the icon again
 
-### 🪟 2. Window Manager & Desktop System
-**Draggable Windows**: Click the header and drag apps across your screen.
-**Focus & Layering**: Clicking an icon opens an app above all the other layers.
-**Desktop Icons**: You can click an icon and it opens the window automatically. To close it you can just click the icon again or just click the close button.
-**Close Buttons**: Every app/window has a red close button. 
+## 2: Bachal's Portfolio App
+Learn a little bit about Bachal's background including his dreams, hobbies, and his favorite subjects in school.
 
-### 👤 3. Welcome Screen
-* Shows Bachal's Photo, a short description of his hobbies and a link on the bottom to his Instagram account.
+## 3. Badminton App
+Watch Bachal play badminton matches included with details of the outcome of the match
 
-### 🚀 4. Bachal's Portfolio App
-**About Me & Goals**: Tells Bachal's dream job and what he wants to do when he grows up.
-**Favorites & Hobbies**: Tells Bachal's favorite subjects and what he likes to do.
-
-### 🌍 5. Bachal's Travel Bucket List App
-**Interactive Sidebar**: Learn about Bachal's dream countries to travel to later in life.
-**Photo Galleries & Insights**: 3 photos per country to see + a 2-3 sentence description on the country itself. 
-
-### 🏸 6. Bachal's Badminton Match Viewer
-* Able to watch videos of Bachal playing Badminton games including outcomes.
-
-### 🖼️ 7. Bachal's Wallpapers App (Feature not listed in the Guide)
-> **Note:** *Bachal's Wallpapers app was designed and developed with the assistance of AI due to lack of js experience.*
-* **Curated Wallpaper Collections:** A collection of wallpapers that I chose seperated into different categories.
-    🏔️ **Nature & Mountains**: (Swiss Alps, Norwegian Fjords, Dolomites, Lake Banff, Mount Fuji)
-    🚀**Space & Aerospace**: (Nebulas, Rocket Launches, Fighter Jets, Apollo Moon Landing, Shuttles)    
-    🌃**Neon & Cyberpunk**: (Tokyo Rainy Nights, Synthwave Highways, Cyber Alleyways)
-    🎨**Minimal & Aesthetic**: (Velvet Dunes, Moody Lakes, Kyoto Gardens, Cosmic Gradients)
-**Custom URL Input**: You can choose your own wallpaper by just copying the direct link and pasting in the custom wallpaper section. Right-click the image and click "Copy Image Link"
-**Reset Button**: You can revert back to the default background when you first opened the OS.
-**Persistent User Storage** (`localStorage`): Every visitor's wallpaper is stored in their browser so it doesn't reset when they return.
-
-## 🛠️ Tech Stack
-* **HTML5:** Semantic markup, video tags, and window layouts.
-* **CSS3:** Glassmorphism, backdrop filters, flexbox, CSS grid, and responsive UI design.
-* **JavaScript (Vanilla ES6):** DOM manipulation, custom dragging physics engine, window stack manager, and `localStorage` state management.
-* **Hosting:** GitHub Pages.
+## 4. Wallpaper app
+*Note: This was developed with the assist of **AI** due to the lack of experience in javascript*
+You can change the background of the OS if you don't want to. We have a mountain, neon/urban, minimal, and aerospace category from a set of wallpapers to choose from. If you don't like any of them you can just paste the direct image link of something you like on the internet and that works as well. 
 
 ---
 
