@@ -4,126 +4,54 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
 
-  <body style="background-image: url('https://www.ourescapeclause.com/wp-content/uploads/2022/11/shutterstock_1464930743-scaled.jpg'); background-color: #000000; height: 100vh; margin: 0; overflow: hidden;">
+  <body style="height: 100vh; margin: 0; overflow: hidden;">
 
     <!-- Top Bar -->
     <div id="top" style="position: absolute; width: 100%; display: flex; justify-content: space-between; top: 0; padding: 4px; backdrop-filter: blur(10px); background-color: rgba(0, 0, 0, 0.125); color: antiquewhite;">
-      <p id="welcomeopen" style="margin-left: 16px; background-color: rgba(256, 256, 256, 0.125); padding: 4px 12px; border-radius: 16px; cursor: pointer;">Bachal's OS</p>
+      <p id="welcomeopen" style="margin-left: 16px; background-color: rgba(256, 256, 256, 0.125); padding: 4px 12px; border-radius: 16px; cursor: pointer;">LAX WebOS</p>
       <p id="timeElement" style="margin-right: 16px; background-color: rgba(256, 256, 256, 0.125); padding: 4px 12px; border-radius: 16px;">Time</p>
     </div>
 
     <!-- Desktop Icons -->
     <div id="desktopApps" style="padding-top: 64px; padding-left: 16px; display: flex; flex-direction: column; gap: 8px;">
-      <div id="portfolioIcon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: 120px; cursor: pointer;">
-        <img src="pictures/nuke.jpg" alt="App Icon" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 8px;">
-        <p style="margin: 0px; color: aquamarine;">Bachal's Portfolio</p>
-      </div>
-
-      <div id="travelIcon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: 120px; cursor: pointer;">
-        <img src="pictures/travel.jpg" alt="Travel Icon" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 8px;">
-        <p style="margin: 0px; color: #fff;">Bachal's Travel Bucket</p>
-      </div>
-
-      <div id="badmintonIcon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: 120px; cursor: pointer;">
-        <img src="pictures/badminton.jpg" alt="Badminton Icon" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 8px;">
-        <p style="margin: 0px; color: #fff;">Bachal's Badminton Videos</p>
-      </div>
-
-      <div id="wallpaperIcon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: 120px; cursor: pointer;">
-        <div style="width: 48px; height: 48px; border-radius: 8px; margin: 0 auto 8px auto; background: linear-gradient(135deg, #ff7e57, #feb47b); display: flex; align-items: center; justify-content: center; font-size: 24px;">
-          🖼️
-        </div>
-        <p style="margin: 0px; color: #fff;">Bachal's Wallpapers</p>
-      </div>
+      
     </div>
 
     <!-- Welcome Window -->
-    <div id="welcome" class="window" style="position: absolute; top: calc(50% - 200px); left: calc(50% - 200px); width: 500px; height: 600px; padding: 16px; background-color: black; text-align: left; display: flex; flex-direction: column;">
+    <div id="welcome" class="window" style="position: absolute; top: calc(50% - 200px); left: calc(50% - 200px); width: 500px; height: 450px; padding: 16px; background-color: black; text-align: left; display: flex; flex-direction: column;">
       <p id="welcomeheader" style="user-select: none; cursor: grab; color: rgba(255, 255, 255, 0.911); margin: 0; text-align: center;">Handle</p>
       <p id="welcomeclose" style="cursor: pointer; color: white; background-color: red; border-radius: 50%; width: 16px; height: 16px; display: inline-block; text-align: center; line-height: 16px; margin: 0 0 12px 0;">X</p>
 
       <h1 style="margin: 4px;">LAX WEBOS</h1>
       <h2 style="margin: 4px;">Los Angeles International Airport - Operations Center</h2>
       <p style="margin: 4px;">Weclome to the LAX Air Traffic &amp; Terminal Operations WebOS. This real-time interface allows users to monitor flight radar, manage gate allocations, and parse system telemetry in this simulation. </p>
-      <h2 style="margin: 4px;">About Me</h2>
-      <p style="margin: 4px;">I am a high school sophomore who plays percussion, badminton, and recently started to learn basic coding.</p>
-      <a href="https://www.instagram.com/bachal_805/">Instagram</a>
+      <h2 style="margin: 4px;">System Controls</h2>
+      <ul style="margin: 4px;">
+        <li>Double-click desktop icons to open Radar, Terminal, or FIDS</li>
+        <li>Drag the top handle of any window to re-position your airspace monitors.</li>
+        <li>Open the Terminal and type <code>lax --help</code> or <code>status</code> for live airport feeds.</li>
+        <li>Refer to the Handbook to understand how to manage operations at Los Angeles International Airport. Good Luck</li>
+      </ul>
     </div>
 
     <!-- Portfolio Window -->
     <div class="window" id="portfolio" style="top: calc(50% - 90px); left: calc(50% - 180px); display: none; width: 950px; height: 600px;">
-      <div class="windowheader" id="portfolioheader">
-        <div class="closebutton" id="portfolioclose"></div>
-        <p style="color: white; margin: 0;">Bachal's Portfolio</p>
-      </div>
-
-      <div style="color: white; margin: 16px; background-color: #1a1919; border-radius: 12px; padding: 16px; min-height: 300px; overflow-y: auto;">
-        <h2>About Me</h2>
-        <p>Desired Major: Aerospace Engineering</p>
-
-        <h2>Favorite Subjects</h2>
-        <ul>
-          <li>Math</li>
-          <li>Physics</li>
-          <li>History</li>
-        </ul>
-
-        <h2>Hobbies</h2>
-        <ul>
-          <li>Playing Percussion</li>
-          <li>Playing Badminton</li>
-          <li>Coding</li>
-          <li>Playing Video Games</li>
-        </ul>
-
-        <h2>Dreams & Goals</h2>
-        <p>My dream is to become an aerospace engineer designer and work for Boeing to make innovative aircraft. I want to travel to countries with beautiful landscapes like Switzerland, Iceland, Norway and Canada</p>
-      </div>
+      
     </div>
 
     <!-- Travel Window -->
     <div class="window" id="travel" style="top: calc(50% - 90px); left: calc(50% - 180px); display: none; width: 950px; height: 600px;">
-      <div class="windowheader" id="travelheader">
-        <div class="closebutton" id="travelclose"></div>
-        <p style="color: white; margin: 0;">Bachal's Travel Bucket</p>
-      </div>
-
-      <div style="color: white; margin: 16px; background-color: #1a1919; border-radius: 12px; padding: 16px; height: 530px; display: flex; flex-direction: row;">
-        <div id="travelSidebar" style="width: 200px; margin-right: 16px; overflow-y: auto; border-right: 1px solid white; padding-right: 8px;"></div>
-        <div id="travelContent" style="flex: 1; overflow-y: auto;">
-          <p>Select a destination to learn more</p>
-        </div>
-      </div>
+      
     </div>
 
     <!-- Badminton Window -->
     <div class="window" id="badminton" style="top: calc(50% - 325px); left: calc(50% - 500px); display: none; width: 1000px; height: 650px;">
-      <div class="windowheader" id="badmintonheader">
-        <div class="closebutton" id="badmintonclose"></div>
-        <p style="color: white; margin: 0;">Bachal's Badminton Videos</p>
-      </div>
-
-      <div style="color: white; margin: 16px; background-color: #1a1919; border-radius: 12px; padding: 16px; height: 570px; display: flex; flex-direction: row;">
-        <div id="badmintonSidebar" style="width: 200px; margin-right: 16px; overflow-y: auto; border-right: 1px solid #555; padding-right: 8px;"></div>
-        <div id="badmintonContent" style="flex: 1; overflow-y: auto;">
-          <p>Select a video to watch it</p>
-        </div>
-      </div>
+      
     </div>
 
     <!-- Wallpaper Window -->
     <div class="window" id="wallpaper" style="top: calc(50% - 300px); left: calc(50% - 475px); display: none; width: 950px; height: 600px;">
-      <div class="windowheader" id="wallpaperheader">
-        <div class="closebutton" id="wallpaperclose"></div>
-        <p style="color: white; margin: 0;">Bachal's Wallpapers</p>
-      </div>
-
-      <div style="color: white; margin: 16px; background-color: #1a1919; border-radius: 12px; padding: 16px; height: 520px; display: flex; flex-direction: row;">
-        <div id="wallpaperSidebar" style="width: 200px; margin-right: 16px; overflow-y: auto; border-right: 1px solid #444; padding-right: 8px;"></div>
-        <div id="wallpaperContent" style="flex: 1; overflow-y: auto; padding-left: 8px;">
-          <p>Select a category to explore wallpapers!</p>
-        </div>
-      </div>
+      
     </div>
 
     <!-- Script -->
