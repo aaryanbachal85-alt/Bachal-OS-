@@ -1,34 +1,476 @@
+/* WebOS 2 Remastered - Core Design System & Theme Variables*/
+:root { 
+    --bg-dark: #020408;
+    --panel-bg: rgba(7, 13, 23, 0.85);
+    --panel-header: rgba(2, 5, 10, 0.95);
+    --accent-cyan: #00ffcc; 
+    --accent-green: #00ff66;
+    --accent-amber: #ffcc00; 
+    --accent-red: #ee0000;
+    --accent-white: #dbdbdb;
+
+    --text-heading-1: #00d455;
+    --text-heading-2: #00d455;
+    --text-body: #dbdbdb;
+    --text-muted: #04bdd5;
+    
+    --border-green: rgba(23, 215, 20, 0.7);
+    --border-glow: 0 0 12px rgba(0, 255, 204, 0.25);
+    --font-mono: 'Courier New', Courier, monospace;
+}
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+/* Text Element Variables*/
+h1 {
+    color: var(--text-heading-1)
+}
+
+h2 {
+    color: var(--text-heading-2)
+}
+
+p, span, li {
+    color: var(--text-body)
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font--mono);
+    background: var(--bg-dark);
+    color: var(--color-body);
+}
+
+/* Fullscreen Loading Overlay */
+#boot-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background:#020408;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+#boot-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.boot-box {
+    width: 420px;
+    background:var(--bg-dark);
+    border: 1px solid var(--border-green);
+    box-shadow: var(--border-glow);
+    padding: 24px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.boot-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-heading-1);
+    margin-bottom: 12px;
+}
+
+.boot-logs {
+    height: 80px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-green);
+    padding: 8px;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-align: left;
+    overflow-y: auto;
+    margin-bottom: 16px;
+}
+
+.progress-bar-track {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-dark);
+    border: 1px soild var(--border-green);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+    transition: width 0.3s ease;
+}
+
+/*Desktop Workspace & Background*/
+#desktop {
+    width: 100vw;
+    height: 100vw;
+    position: relative;
+    background: url('a380.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+#desktop::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(9, 20, 34, 0.4) 0%, rgba(2, 4, 8, 0.85) 100%),
+                repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Top system bar*/
+#top-bar {
+    position: relative;
+    z-index: 10;
+    height: 32px;
+    background: rgba(4, 9, 16, 0.95);
+    border-bottom: 1px solid var(--border-green);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    font-size: 11px;
+}
+
+/* Metrics text container in top bar */
+#sys-metrics { 
+  
+  color: var(--text-muted); 
+}
+
+/* Highlight tags inside metric readout */
+#sys-metrics i { 
+  
+  color: var(--accent-cyan); 
+  
+  font-style: normal; 
+}
+
+/*Desktop Shortcut Icon*/
+#desktop-icons {
+    position: relative;
+    z-index: 10;
+    padding: 16px;
+    display: flex;
+    flex-direction:column;
+    gap: 12px;
+}
+
+/* Individual desktop shortcut wrapper*/
+.icon {
+    width: 72px;
+    text-align: center;
+    color: var(--text-body);
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.icon-img {
+    font-size: 28px;
+    background: rgba(9, 19, 32, 0.8);
+    border: 1px solid var(--border-green);
+    border-radius: 8px;
+    padding: 6px;
+    margin-bottom: 4px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/*Hover state for shortcut icons*/
+.icon:hover .icon-img {
+    border-color: var(--border-green);
+    transform: scale(1.08);
+    box-shadow: var(--border-glow)
+}
+
+/* Window System */
 .window {
     position: absolute;
-    border-radius: 18px;
+    z-index: 10;
+    background: var(--panel-bg);
+    border: 2px solid var(--border-green);
+    border-radius: 6px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8), var(--border-glow);
     display: flex;
     flex-direction: column;
-    background: rgba(0, 0, 0, 0.75);
-    padding: 16px;
-    
-} 
+    overflow: hidden;
+}
 
-.windowheader {
+/* widnow header */
+.window-header {
+    background: var(--panel-header);
+    padding: 6px 10px;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(0, 255, 025, 0.15);
+    color: var(--accent-cyan)
+}
+
+/* Standard control buttons inside header*/
+.window-controls button {
+    background: transparent;
+    border: none;
+    color: var(--accent-cyan);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.close-btn {
+    background: var(--accent-red);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.window-body {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 11px;
+}
+
+/* Application: radar / tactical app*/
+.radar-layout {
+    display: flex;
+    gap: 10px;
+    background: #03070d;
+}
+
+/* Radar scope HTML canvas element*/
+#radarCanvas {
+    background: #010306;
+    border: 1px solid rgba(0, 255, 205, 0.2);
+    border-radius: 4px;
+}
+
+.radar-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.radar-controls h4{
+    font-size: 11px;
+    color: var(--text-heading-2);
+    border-bottom: 1px solid rgba(0, 255, 205, 0.2);
+    padding-bottom: 2px;
+}
+
+.queue-box {
+    height: 180px;
+    background: #0c1b30;
+    border: 1px solid var(--border-green);
+    padding: 6px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-radius: 4px;
+}
+
+.queue-empty {
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    margin-top: 60px;
+    font-size: 10px;
+}
+
+queue-item {
+    background: #0d1e33;
+    border-left: 3px solid var(--accent-amber);
+    padding: 6px;
+    font-size: 10px;
+    border-radius: 2px;
+}
+
+.queue-item.arrival {
+    border-left-color: var(--accent-green)
+}
+
+.queue-item.departure {
+    border-left-color: #ff9900;
+}
+
+.queue-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    color: var(--text-body);
+}
+
+.queue-actions {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.queue-actions button {
+    flex: 1;
+    background: rgba(0, 255, 204, 0.1);
+    border: 1px solid var(--accent-cyan);
+    color: var(var(--accent-cyan));
+    font-size: 9px;
+    cursor: pointer; 
+    padding: 2px;
+}
+
+.queue-actions button:hover {
+    background: var(--accent-cyan);
+    color: #000
+}
+
+.logs-box {
+    flex: 1;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-green);
+    padding: 6px;
+    overflow-y: auto;
+    color: var(--text-body);
+    font-size: 10px;
+}
+
+/* Application: Flightdesk / Fids Table*/
+.fids-table {
+    width: 100%;
+    border-collapse:collapse;
+    text-align: left;
+    font-size: 11px;
+}
+
+.fids-table th {
+    border-bottom: 1px solid rgba(0, 255, 204, 0.3); 
+    color: var(--text-heading-1);
+    padding: 6px;
+}
+
+.fids-table td {
+    border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+    padding: 6px;
+    color: var(--text-body);
+}
+
+/* Application Terminal Console*/
+.terminal-body {
+    background: var(--bg-dark);
+    font-family: var(--font--mono);
+    color: var(--accent-green);
+    display: flex;
+    flex-direction: column;
+}
+
+#term-output {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.term-line {
+    display: flex;
+}
+
+#term-input {
+    background: transparent;
+    border: none;
+    color: var(--accent-green);
+    outline: none;
+    flex: 1;
+    font-family: var(--font--mono);
+}
+
+/* Application Tower Notes*/
+#notes-input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: var(--accent-green);
+    resize: none;
+    outline: none;
+    font-family: var(--font--mono)
+}
+
+.action-btn {
+    width: 100%;
+    background: var(--accent-green);
+    color: #000;
+    border: none;
+    padding: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* Taskbar & System Launcher */
+#taskbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 36px;
+    background: rgba(3, 7, 13, 0.95);
+    border-top: 1px solid var(--border-green);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    cursor: grab;
-    user-select: none; 
+    padding: 0 8px;
+    gap: 8px;
 }
 
-.closebutton {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background-color: #ff5f57;
-    cursor: pointer; 
-    border: 1px solid rgba(255, 255, 255, 0.2);
+.start-btn {
+    background: rgba(0, 255, 205, 0.15);
+    border: 1px solid var(--border-green);
+    color: var(--accent-white);
+    padding: 4px 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px; 
 }
 
-.selected {
-    background-color: rgba(127,255,212,0.2)
+#running-tasks {
+    display: flex;
+    gap: 6px;
 }
 
-.sidebarItem:hover {
-    background-color: #343434;
+.task-tab {
+    background: #091422;
+    border: 1px solid rgba(0, 255, 205, 0.2);
+    color: var(--text-body);
+    padding: 4px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.task-tab.active {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: #0e2035;
 }
