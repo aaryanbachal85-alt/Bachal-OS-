@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
 
-  <body style="height: 100vh; margin: 0; overflow: hidden;">
+  <body style=" background-image: url(https://cdn.wallpapersafari.com/32/25/U2w9pc.jpg); background-size: cover; height: 100vh; margin: 0; overflow: hidden;">
 
     <!-- Top Bar -->
     <div id="top" style="position: absolute; width: 100%; display: flex; justify-content: space-between; top: 0; padding: 4px; backdrop-filter: blur(10px); background-color: rgba(0, 0, 0, 0.125); color: antiquewhite;">
@@ -14,7 +14,8 @@
 
     <!-- Desktop Icons -->
     <div id="desktopApps" style="padding-top: 64px; padding-left: 16px; display: flex; flex-direction: column; gap: 8px;">
-      
+      <div id="handbookIcon" style="text-align: center; padding: 16px; width: 120px; cursor: pointer;">
+      <img src="https://th.bing.com/th/id/OIP.keAWlTLP884zgAzrCXoDXQHaHa?w=201&h=201&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3" style="width: 100px; height: 100px; border-radius: 8px; margin: 0 auto 8px auto; background: #08101c; border: 1px solid #ffcc00; display: flex; align-items: center; justify-content: center; font-size: 24px;">
     </div>
 
     <!-- Welcome Window -->
@@ -34,11 +35,37 @@
       </ul>
     </div>
 
-    <!-- Portfolio Window -->
-    <div class="window" id="portfolio" style="top: calc(50% - 90px); left: calc(50% - 180px); display: none; width: 950px; height: 600px;">
-      
-    </div>
+    <!-- Handbook Window -->
+    <div class="window" id="handbook" style="top: calc(50% - 250px); left: calc(50% - 350px); display: none; width: 700px; height: 480px; background: #080d1a;">
+      <div class="windowheader" id="handbookheader" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background-color: #080d1a; cursor: grab; user-select: none;">
+        <span style="color: #ffcc00; font-weight: bold; font-size: 12px;">LAX_OPERATIONS_MANUAL.pdf</span>
+        <div class="closebutton" id="handbookclose" style="cursor: pointer; color: white; background: red; border-radius: 50%; width: 16px; height: 16px; text-align: center; line-height: 16px;">X</div>
+      </div>
 
+      <!-- Main E-Book Container -->
+      <div style="position: relative; display: flex; flex: 1; margin: 12px; background: #0f172a; border-radius: 8px; border: 1px solid #1e293b; overflow: hidden;">
+    
+      <!-- Left Flip Zone (Previous Page)-->
+      <div id="prevPageBtn" style="width: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(0,0,0,0.2); color: #88a0c0; font-size: 20px; user-select: none; transition: 0.2s;">
+      ◀
+      </div>
+
+      <!--Page Content Viewport-->
+      <div id="bookPageContent" style="flex: 1; padding: 20px; color: #e2e8f0; font-family: monospace; overflow-y: auto;">
+
+      </div>
+      
+      <!--Right Flip Zone( Next Page)-->
+      <div id="nextPagebtn" style="width: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(0, 0, 0, 0.12); color: #88a0c0; font-size: 20px; user-select: none; transition: 0.2s;">
+
+      </div>
+
+      <!--Page Footer Counter-->
+      <div style="display: flex; justify-content: space-between; padding: 0 16px 12px; font-size: 12px; color: #64748b; font-family: monospace;">
+        <span id="bookPageTitle">Page Title</span>
+        <span id="bookPageNum">Page 1 of X</span>
+      </div>  
+    </div>
     <!-- Travel Window -->
     <div class="window" id="travel" style="top: calc(50% - 90px); left: calc(50% - 180px); display: none; width: 950px; height: 600px;">
       

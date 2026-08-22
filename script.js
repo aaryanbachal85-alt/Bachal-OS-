@@ -149,3 +149,12 @@ function initializeIcon(id, screenId) {
   });
 }
 
+/* ========== E-BOOK HANDBOOK APP ========== */
+
+var handbookPages = [
+  {
+    title: "Table of Contents", 
+    content: `
+    <h2 style`
+  }
+]
