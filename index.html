@@ -7,15 +7,19 @@
   <body style=" background-image: url(https://cdn.wallpapersafari.com/32/25/U2w9pc.jpg); background-size: cover; height: 100vh; margin: 0; overflow: hidden;">
 
     <!-- Top Bar -->
-    <div id="top" style="position: absolute; width: 100%; display: flex; justify-content: space-between; top: 0; padding: 4px; backdrop-filter: blur(10px); background-color: rgba(0, 0, 0, 0.125); color: antiquewhite;">
-      <p id="welcomeopen" style="margin-left: 16px; background-color: rgba(256, 256, 256, 0.125); padding: 4px 12px; border-radius: 16px; cursor: pointer;">LAX WebOS</p>
-      <p id="timeElement" style="margin-right: 16px; background-color: rgba(256, 256, 256, 0.125); padding: 4px 12px; border-radius: 16px;">Time</p>
+   <div id="top-bar">
+    <p id="welcomeopen">LAX WebOS</p>
+    <div id="sys-metrics">TWR: <i>120.95 MHz</i> | METAR: <i>CAVOK</i></div>
+    <p id="timeElement">Time</p>
     </div>
 
     <!-- Desktop Icons -->
     <div id="desktopApps" style="padding-top: 64px; padding-left: 16px; display: flex; flex-direction: column; gap: 8px;">
+      
+      <!--Handbook Icon-->
       <div id="handbookIcon" style="text-align: center; padding: 16px; width: 120px; cursor: pointer;">
       <img src="https://th.bing.com/th/id/OIP.keAWlTLP884zgAzrCXoDXQHaHa?w=201&h=201&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3" style="width: 100px; height: 100px; border-radius: 8px; margin: 0 auto 8px auto; background: #08101c; border: 1px solid #ffcc00; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+      <span style="color: #ffffff; font-family: monospace; font-size: 16px !important; font-weight: bold; text-align: center; text-shadow: 1px 1px 3px #000; display: block;">Handbook</span>
     </div>
 
     <!-- Welcome Window -->
@@ -36,7 +40,7 @@
     </div>
 
     <!-- Handbook Window -->
-    <div class="window" id="handbook" style="top: calc(50% - 250px); left: calc(50% - 350px); display: none; width: 700px; height: 480px; background: #080d1a;">
+    <div class="window" id="handbook" style="top: calc(50% - 275px); left: calc(50% - 425px); display: none; width: 850px; height: 500px; background: #080d1a;">
       <div class="windowheader" id="handbookheader" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background-color: #080d1a; cursor: grab; user-select: none;">
         <span style="color: #ffcc00; font-weight: bold; font-size: 12px;">LAX_OPERATIONS_MANUAL.pdf</span>
         <div class="closebutton" id="handbookclose" style="cursor: pointer; color: white; background: red; border-radius: 50%; width: 16px; height: 16px; text-align: center; line-height: 16px;">X</div>
@@ -46,18 +50,18 @@
       <div style="position: relative; display: flex; flex: 1; margin: 12px; background: #0f172a; border-radius: 8px; border: 1px solid #1e293b; overflow: hidden;">
     
       <!-- Left Flip Zone (Previous Page)-->
-      <div id="prevPageBtn" style="width: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(0,0,0,0.2); color: #88a0c0; font-size: 20px; user-select: none; transition: 0.2s;">
-      ◀
+      <div id="prevPageBtn" style="width: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none;">
+        &#9664; <!-- Left Triangle Arrow -->
       </div>
 
       <!--Page Content Viewport-->
-      <div id="bookPageContent" style="flex: 1; padding: 20px; color: #e2e8f0; font-family: monospace; overflow-y: auto;">
+      <div id="bookPageContent" style="flex: 1; padding: 24px 32px; color: #e2e8f0; font-family: monospace; font-size: 15px; line-height: 1.6; overflow-y: auto; width: 100%;">
 
       </div>
       
-      <!--Right Flip Zone( Next Page)-->
-      <div id="nextPagebtn" style="width: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(0, 0, 0, 0.12); color: #88a0c0; font-size: 20px; user-select: none; transition: 0.2s;">
-
+      <!-- Right Flip Zone (Next Page)-->
+      <div id="nextPageBtn" style="width: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none;">
+        &#9654; <!-- Right Triangle Arrow -->
       </div>
 
       <!--Page Footer Counter-->
@@ -66,6 +70,7 @@
         <span id="bookPageNum">Page 1 of X</span>
       </div>  
     </div>
+
     <!-- Travel Window -->
     <div class="window" id="travel" style="top: calc(50% - 90px); left: calc(50% - 180px); display: none; width: 950px; height: 600px;">
       

@@ -135,33 +135,45 @@ body, html {
     z-index: 1;
 }
 
-/* Top system bar*/
+/* Top system bar */
 #top-bar {
-    position: relative;
-    z-index: 10;
-    height: 32px;
-    background: rgba(4, 9, 16, 0.95);
-    border-bottom: 1px solid var(--border-green);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 12px;
-    font-size: 11px;
+  position: relative;
+  z-index: 10;
+  height: 50px; /* Increased from 32px */
+  background: rgba(4, 9, 16, 0.85);
+  border-bottom: 1px solid var(--border-green);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px; /* Increased side padding */
+  font-size: 16px; /* Increased from 11px */
+}
+
+/* Pills inside top bar */
+#welcomeopen, #timeElement {
+  background-color: rgba(255, 255, 255, 0.125);
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  margin: 0;
+}
+
+#welcomeopen {
+  cursor: pointer;
 }
 
 /* Metrics text container in top bar */
-#sys-metrics { 
-  
-  color: var(--text-muted); 
+#sys-metrics {
+  color: var(--text-muted);
+  font-size: 15px;
 }
 
 /* Highlight tags inside metric readout */
-#sys-metrics i { 
-  
-  color: var(--accent-cyan); 
-  
-  font-style: normal; 
+#sys-metrics i {
+  color: var(--accent-cyan);
+  font-style: normal;
 }
 
 /*Desktop Shortcut Icon*/
@@ -473,4 +485,99 @@ queue-item {
     border-color: var(--accent-cyan);
     color: var(--accent-cyan);
     background: #0e2035;
+}
+
+#handbook {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+#bookPageContent {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto; 
+}
+/* Custom Dark Scrollbar for Handbook */
+#bookPageContent::-webkit-scrollbar {
+    width: 6px;
+}
+
+#bookPageContent::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#bookPagecontent::-webkit-scrollbar-thumb {
+    background: var(--border-green, #00ffcc);
+    border-radius: 4px;
+}
+
+/* Radar Scope */
+.radar-layout {
+    display: flex;
+    gap: 10px;
+    background: #03070d;
+}
+
+#radarCanvas {
+    background: #010306;
+    border: 1px solid rgba(0, 255, 205, 0.2);
+    border-radius: 4px;
+}
+
+.radar-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.radar-controls h4 {
+    font-size: 11px;
+    color: var(--accent-green);
+    border-bottom: 1px solid rgba(0, 255, 205, 0.2);
+    padding-bottom: 2px;
+}
+
+.queue-box {
+    flex: 1; 
+    background: #08101c; 
+    border: 1px solid rgba(0, 255, 205, 0.2);
+    padding: 6px; 
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column; 
+    gap: 6px;
+    border-radius: 4px;
+}
+
+.queue-item {
+    background: #0d1e33;
+    border-left: 3px solid var(--accent-amber);
+    padding: 8px;
+    font-size: 11px;
+    border-radius: 2px;
+    font-family: monospace;
+}
+
+.queue-item.arrival { border-left-color: var(--accent-green)}
+.queue-item.departure { border-left-color: #ff9900}; 
+
+.queue-header {
+    display: flex;
+    justify-content: space-between; 
+    font-weight: bold;
+    color: var(--text-body);
+    margin-bottom: 4px;
+}
+
+.queue-details {
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+/* Radar window glass effect */
+#radar {
+    backdrop-filter: blur(12px);
 }
