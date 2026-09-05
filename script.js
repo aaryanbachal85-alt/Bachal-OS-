@@ -394,14 +394,14 @@ renderBookPage();
     cargo: { color: "#ffcc00", symbol: "◆", prefix: "CARGO ", label: "Cargo", z: 4 },
     regional: { color: "#88ffff", symbol: "▼", prefix: "RGNL ", label: "Regional", z: 3 },
     charter: { color: "#ff8800", symbol: "▲", prefix: "CHTR ", label: "Charter", z: 3 },
-    ga: { color: "#8888ff", symbol: "◇", prefix: "N", label: "General Av", z: 2 },
+    ga: { color: "#8888ff", symbol: "◇", prefix: "", label: "General Av", z: 2 },
     cg: { color: "#ff8800", symbol: "◎", prefix: "CG ", label: "Coast Guard", z: 6 },
     medevac: { color: "#ff0044", symbol: "♦", prefix: "LGD ", label: "Medevac", z: 7 },
     gov: { color: "#ff00ff", symbol: "★", prefix: "", label: "Gov/VIP", z: 8 }
   };
 
   // --- Cargo ramp mapping ---
-  var CARGO = _RAMP_MAP = {
+  var CARGO_RAMP_MAP = {
     "FX": { name: "Ramp 1", color: "#ff6600", label: "FedEx" },
     "5X": { name: "Ramp 2", color: "#8b0000", label: "UPS" },
     "default": { name: "Ramp 3", color: "#666666", label: "Other" }
@@ -429,23 +429,23 @@ renderBookPage();
   function pickAircraft(category) {
     switch (category) {
       case "major": case "intl":
-        return (Math.random() < 0.35) ? AC_HEAVY[rand(AC_HEAVY)] : AC_NARROW[rand(AC_NARROW)]
+        return (Math.random() < 0.35) ? rand(AC_HEAVY) : rand(AC_NARROW);
       case "cargo":
-        return AC_CARGO[rand(AC_CARGO)];
+        return rand(AC_CARGO);
       case "regional":
-        return AC_REGIONAL[rand(AC_REGIONAL)];
+        return rand(AC_REGIONAL);
       case "charter":
-        return (Math.random() < 0.3) ? AC_HEAVY[rand(AC_HEAVY)] : AC_NARROW[rand(AC_NARROW)];
+        return (Math.random() < 0.3) ? rand(AC_HEAVY) : rand(AC_NARROW);
       case "ga":
-        return AC_GA[rand(AC_GA)];
+        return rand(AC_GA);
       case "cg":
-        return AC_CG[rand(AC_CG)];
+        return rand(AC_CG);
       case "medevac":
-        return AC_MEDEVAC[rand(AC_MEDEVAC)];
+        return rand(AC_MEDEVAC);
       case "gov":
-        return AC_GOV[rand(AC_GOV)];
+        return rand(AC_GOV);
       default:
-        return AC_NARROW[rand(AC_NARROW)]
+        return rand(AC_NARROW);
     }
   }
 
@@ -461,15 +461,15 @@ renderBookPage();
       medevac: AIRLINES_MEDEVAC,
       gov: AIRLINES_GOV
     }[category] || AIRLINES_MAJOR;
-    return pool[rand(pool)];
+    return rand(pool);
   }
 
   function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
   function createFlight(category, overrides) {
     var isArrival = (category !== "cg" && category !== "ga") ? Math.random() > 0.45 : false;
-    var airline = pickAirline(category);
-    var aircraft = pickAircraft(category);
+    var airline = pickAirline(category) || "UNK";
+    var aircraft = pickAircraft(category) || "UNKNOWN";
     var style = CATEGORY_STYLE[category];
     var isHeavy = AC_HEAVY.indexOf(aircraft) !== -1;
 
@@ -525,9 +525,9 @@ renderBookPage();
       squawk: (1000 + Math.floor(Math.random() * 7000)).toString(8),
       // Visual
       color: style.color,
-      stymbol: style.symbol,
-      labelPrefex: style.prefix,
-      zOrder: stylze.z,
+      symbol: style.symbol,
+      labelPrefix: style.prefix,
+      zOrder: style.z,
       // State
       active: true,
       // Cartesian (computed each frame)
@@ -543,11 +543,11 @@ renderBookPage();
    * 4. RESOURCE MANAGER
    * ============================================================ */
   function assignRunway(flight) {
-    return flgith.runway;
+    return flight.runway;
   }
 
   function assignCargoRamp(flight) {
-    return flight.cargoR
+    return flight.cargoRamp;
   }
 
   /* ============================================================
@@ -574,7 +574,7 @@ renderBookPage();
 
   function pickCategoryByWeight(weights) {
     var total = 0;
-    for (var k in weights) total == weights[k];
+    for (var k in weights) total += weights[k];
     var r = Math.random() * total;
     var acc = 0;
     for (var k in weights) {
@@ -585,13 +585,14 @@ renderBookPage();
   }
 
   function spawnFlight() {
-    if (flgiths.length >= MAX_FLIGHTS) return;
+    if (!radarPowerOn) return;
+    if (flights.length >= MAX_FLIGHTS) return;
     var hour = getSimHour();
     var weights = getSpawnWeights(hour);
     var pick = pickCategoryByWeight(weights);
     var isArrival = pick.indexOf("_arrival") !== -1;
     var category = pick.split("_")[0];
-    var flight = createFlight(category, { type: isArrival ? "arrival" : "depature" });
+    var flight = createFlight(category, { type: isArrival ? "arrival" : "departure" });
     flights.push(flight);
     updateQueueUI();
   }
@@ -610,47 +611,46 @@ renderBookPage();
     if (flight.category === "cg") {
       flight.angle += 0.02 * dtSimMin;
       flight.distance = 50 + Math.sin(Date.now() / 5000) * 10;
-      polartoCartesian(flight)
-    };
-    return;
-  }
-
-  // GA direct routing (simplified)
-  if (flight.category === "ga") {
-    var dx = LAX_CENTER.x - flight.x;
-    var dy = LAX_CENTER.y - flight.y;
-    var dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist > 5) {
-      flight.angle = Math.atan2(dy, dx);
-      flight.distance = dist * NM_PER_PX;
+      polarToCartesian(flight);
     }
-    polartoCartesian(flight);
-    return;
-  }
 
-  // Standard approach/departure
-  var deltaDist = (flight.targetDistance - flight.distance) * 0.03 * dtSimMin;
-  flight.distance += deltaDist;
+    // GA direct routing (simplified)
+    if (flight.category === "ga") {
+      var dx = LAX_CENTER.x - flight.x;
+      var dy = LAX_CENTER.y - flight.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > 5) {
+        flight.angle = Math.atan2(dy, dx);
+        flight.distance = dist * NM_PER_PX;
+      }
+      polarToCartesian(flight);
+      return;
+    }
 
-  // Smooth heading transition
-  var headingDiff = normalizeAngle(flight.heading - flight.angle);
-  flight.angle += headingDiff * 0.05 * dtSimMin;
+    // Standard approach/departure
+    var deltaDist = (flight.targetDistance - flight.distance) * 0.03 * dtSimMin;
+    flight.distance += deltaDist;
 
-  polartoCartesian(flight);
+    // Smooth heading transition
+    var headingDiff = normalizeAngle(flight.heading - flight.angle);
+    flight.angle += headingDiff * 0.05 * dtSimMin;
 
-  // Check completion
-  if (flight.type === "arrival" && flight.distance < 6) {
-    flight.active = false;
-    logEvent(flight.id + "landed on " + flight.runway);
-  } else if (flight.type === "departure " && flight.distance > 165) {
-    flight.active = false;
-    logEvent(flight.id + "departed " + flight.runway);
+    polarToCartesian(flight);
+
+    // Check completion
+    if (flight.type === "arrival" && flight.distance < 6) {
+      flight.active = false;
+      logEvent(flight.id + " landed on " + flight.runway);
+    } else if (flight.type === "departure" && flight.distance > 165) {
+      flight.active = false;
+      logEvent(flight.id + " departed " + flight.runway);
+    }
   }
 
   function polarToCartesian(flight) {
     var cx = LAX_CENTER.x, cy = LAX_CENTER.y;
     flight.x = cx + Math.cos(flight.angle) * (flight.distance / NM_PER_PX);
-    fligt.y = cy + Math.sin(flight.angle) * (flight.distance / NM_PER_PX);
+    flight.y = cy + Math.sin(flight.angle) * (flight.distance / NM_PER_PX);
   }
 
   function normalizeAngle(a) {
@@ -718,6 +718,9 @@ renderBookPage();
   var lastSweepNorth = false;
   var audioCtx = null;
   var radarInitialized = false;
+  var radarPowerOn = false;
+  var radarWindowOpen = false;
+  var radarAnimationRunning = false;
 
   function ensureAudioContext() {
     if (!audioCtx) {
@@ -849,7 +852,7 @@ renderBookPage();
     ctx.shadowColor = "#00ffcc";
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + Math.cos(sweepAngle) * RADAR_RADIUS, cy + Math.sin(sweepAngle) * RADIUS);
+    ctx.lineTo(cx + Math.cos(sweepAngle) * RADAR_RADIUS, cy + Math.sin(sweepAngle) * RADAR_RADIUS);
     ctx.stroke();
     ctx.shadowBlur = 0;
   }
@@ -918,8 +921,10 @@ renderBookPage();
         ? '<div class="queue-empty">No traffic</div>'
         : list.map(function (f) {
           var ramp = f.cargoRamp ? ' <span style="color:' + f.cargoRamp.color + '">[' + f.cargoRamp.name + ']</span>' : '';
-          return '<div class="queue-item ' + f.type + '">' + '<div class="queue-header"><span>' + (f.labelPrefix || "") + f.id + '</span><span>' + f.aircraft + '</span></div' +
-            '<div class="queue-details">RWY: ' + f.runway + ramp + ' | ALT: ' + f.altitude.toLocaleString() + 'ft | SPD: ' + Math.round(f.speed * 150) + 'Kts | DIST: ' + Math.round(f.distance) + 'nm</div>' + '</div>';
+          var callsign = (f.labelPrefix || "") + (f.id || "UNKNOWN");
+          var aircraft = f.aircraft || "UNKNOWN AIRCRAFT";
+          return '<div class="queue-item ' + (f.type || "unknown") + '">' + '<div class="queue-header"><span>' + callsign + '</span><span>' + aircraft + '</span></div>' +
+            '<div class="queue-details">RWY: ' + (f.runway || "-") + ramp + ' | ALT: ' + (f.altitude || 0).toLocaleString() + 'ft | SPD: ' + Math.round((f.speed || 0) * 150) + 'Kts | DIST: ' + Math.round(f.distance || 0) + 'nm</div>' + '</div>';
         }).join("");
     }
   }
@@ -930,6 +935,11 @@ renderBookPage();
   var lastFrame = 0;
 
   function animateRadar(ts) {
+    if (!radarPowerOn || !radarWindowOpen) {
+      radarAnimationRunning = false;
+      return;
+    }
+
     if (!lastFrame) lastFrame = ts;
     var dtRealMs = ts - lastFrame;
     lastFrame = ts;
@@ -950,6 +960,13 @@ renderBookPage();
     requestAnimationFrame(animateRadar);
   }
 
+  function startRadarAnimation() {
+    if (!radarPowerOn || !radarWindowOpen || radarAnimationRunning) return;
+    radarAnimationRunning = true;
+    lastFrame = 0;
+    requestAnimationFrame(animateRadar);
+  }
+
   /* ============================================================
    * 11. WINDOW INTEGRATION
    * ============================================================ */
@@ -961,13 +978,32 @@ renderBookPage();
     initializeWindow("radar");
     initializeIcon("radarIcon", "radar");
 
+    var radarPowerOnButton = document.querySelector("#radarPowerOn");
+    var radarPowerOffButton = document.querySelector("#radarPowerOff");
+    var radarCloseButton = document.querySelector("#radarclose");
+
+    radarPowerOnButton.addEventListener("change", function () {
+      radarPowerOn = true;
+      startRadarAnimation();
+    });
+
+    radarPowerOffButton.addEventListener("change", function () {
+      radarPowerOn = false;
+    });
+
+    radarCloseButton.addEventListener("click", function () {
+      radarWindowOpen = false;
+    });
+
     // Start animation when radar window first opens
     var radarEl = document.querySelector("#radar");
     if (radarEl) {
       var observer = new MutationObserver(function () {
         if (radarEl.style.display === "flex") {
-          animateRadar(performance.now());
-          observer.disconnect();
+          radarWindowOpen = true;
+          startRadarAnimation();
+        } else {
+          radarWindowOpen = false;
         }
       });
       observer.observe(radarEl, { attributes: true, attributeFilter: ["style"] });
@@ -978,12 +1014,8 @@ renderBookPage();
     updateSimTimeDisplay();
   }
 
-  // Auto-init when DOM ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initRadarModule);
-  } else {
-    initRadarModule();
-  }
+  // The script is loaded after the app markup, so the Radar controls can bind now.
+  initRadarModule();
 
   /* ============================================================
    * 12. GLOBAL STATE (exposed for Terminal CLI)

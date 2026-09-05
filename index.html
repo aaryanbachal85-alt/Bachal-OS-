@@ -28,6 +28,12 @@
       <span style="color: #00ffcc; font-family: monospace; font-size: 14px; font-weight: bold; text-align: center; text-shadow: 1px 1px 3px #000; display: block;">Radar</span>
     </div>
 
+    <!-- ATC Tower Icon -->
+     <div id ="towerIcon" class="tower-icon">
+      <div class="tower-icon-symbol">ATC</div>
+      <span>Tower Control</span>
+     </div>
+
   </div>
 
     <!-- Welcome Window -->
@@ -81,10 +87,15 @@
     </div>
 
     <!-- Radar Window -->
-    <div class="window" id="radar" style="top: calc(50% - 200px); left: calc(50% - 200px); display: none; width: 600px; height: 450px; background: #080d1a;">
+    <div class="window" id="radar" style="top: calc(50% - 310px); left: calc(50% - 450px); display: none; width: 900px; height: 620px; background: #080d1a;">
       <div class="window-header" id="radarheader" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background-color: #111a2e; cursor: grab; user-select: none;">
         <span style="color: #00ffcc; font-weight: bold; font-size: 12px;">RADAR // SOCAL_APPROACH</span>
         <span id="simTimeDisplay" style="color: #00ff66; font-family: monospace; font-size: 11px;">SIM: 14: 00Z</span>
+        <fieldset class="radar-power" aria-label="Radar power">
+          <legend>POWER</legend>
+          <label><input type="radio" name="radarPower" id="radarPowerOff" value="off" checked> OFF</label>
+          <label><input type="radio" name="radarPower" id="radarPowerOn" value="on"> ON</label>
+        </fieldset>
         <button class="close-btn" id="radarclose" style="cursor: pointer; color: white; background: #ee0000; border: none; border-radius: 50%; width: 16px; height: 16px; text-align: center; line-height: 16px;">X</button>
       </div>
       <div class ="radar-layout" style="display: flex; gap: 10px; flex: 1; margin: 8px; background: #03070d; border-radius: 6px; border: 1px solid #00ffcc33; overflow: hidden;">
@@ -99,17 +110,72 @@
       </div>
     </div>
 
-    <!-- Badminton Window -->
-    <div class="window" id="badminton" style="top: calc(50% - 325px); left: calc(50% - 500px); display: none; width: 1000px; height: 650px;">
+    <!-- ATC Window -->
+    <div class="window" id="runwayControl" style="top: calc(50% - 320px); left: calc(50% - 460px); display: none; width: 920px; height: 640px;">
+      <div class="window-header" id="runwayControlheader">
+        <span>LAX // ATC_TOWER_CONTROL</span>
+        <span id="towerStatus">SYSTEM READY</span>
+        <button class="close-btn" id="runwayControlclose">X</button>
+      </div>
+      <div class="tower-layout">
+        <section class="tower-panel">
+          <h3>ACTIVE RUNWAYS</h3>
+        <div id="runwayStatusGrid">
+      </div>
       
-    </div>
+      <h3>ACTIVE FLIGHTS</h3>
+      <div class="tower-filter-row">
+        <button data-tower-filter="all">ALL</button>
+        <button data-tower-filter="arrivals">ARRIVALS</button>
+        <button data-tower-filter="departure">DEPARTURES</button>
+      </div>
 
-    <!-- Wallpaper Window -->
-    <div class="window" id="wallpaper" style="top: calc(50% - 300px); left: calc(50% - 475px); display: none; width: 950px; height: 600px;">
-      
+        <div id="towerQueueList"></div>
+      </section>
+
+      <section class="tower-panel tower-detail-panel">
+        <h3>FLIGHT CONTROL</h3>
+        <div id="towerSelectedFlight">
+          Select an aircraft from the active-flight list.
+        </div>
+
+        <div id="towerAssignmentsControls" hidden>
+          <label>
+            Terminal
+            <select id="towerTerminalSelect"></select>
+          </label>
+
+          <label>
+            Gate
+            <select id="towerGateSelect"></select>
+          </label>
+
+          <label>
+            Runway
+            <select id="towerRunwaySelect"></select>
+          </label>
+
+          <label>
+            Clearance
+            <select id="towerClearanceSelect"></select>
+          </label>
+          
+          <div class ="tower-action-grid">
+            <button id="assignFlightButton">ASSIGN</button>
+            <button id="holdFlightButton">HOLD</button>
+            <button id="releaseFlightButton">RELEASE HOLD</button>
+            <button id="takeoffFightButton">CLEAR TAKEOFF</button>
+            <button id="landingFlightButton">CLEAR LANDING</button>
+          </div>
+        </div>
+
+        <h3>ATC LOG</h3>
+        <div id="towerLog"></div>
+      </section>
     </div>
+    
 
     <!-- Script -->
-    <script src="script.js"></script>
+    <script src="script.js?v=5"></script>
   </body>
 </html>
