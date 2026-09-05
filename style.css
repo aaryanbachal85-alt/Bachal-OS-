@@ -581,3 +581,31 @@ queue-item {
 #radar {
     backdrop-filter: blur(12px);
 }
+
+/* Radar Queue Tabs */
+.queue-tabs { display: flex; gap: 2px}
+.queue-tab {
+    background: transparent; border: none; color: #88a0c0;
+    padding: 2px 8px; font-size: 10px; font-family: monospace;
+    cursor: pointer; border-radius: 3px 3px 0 0;
+}
+
+.queue-tab.active { background: #00ffcc22; color: #00ffcc; border-bottom: 2px solid #00ffcc; }
+.queue-tab:hover { color: #00ffcc }
+
+/* Alert queue items */
+.queue-item.alert { border-left-color: #ff0044; background: rgba(255, 0, 68, 0.1); animation: pulse 1.5s infinite ;}
+@keyframes pulse {0%,100% { opacity: 1;} 50% { opacity: 0.6; } }
+
+/* Runway status bars (if you add them) */
+.runway-status { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.runway-row { display: flex; align-items: center; gap: 8px; font-size: 10px; }
+.runway-row .rw-label { width: 36px; font-weight: bold; color: #00ff66; }
+.runway-row .rw-bar { flex: 1; height: 8px; background: #08101c; border-radius: 4px; overflow: hidden; }
+.runway-row .rw-fill { height: 100%; background: linear-gradient(90deg, #00ff66, #00ffcc); transition: width 0.5s; }
+.runway-row .rw-pct { width: 36px; text-align: right; color: #88a0c0; }
+
+/* Cargo ramp Legend */
+.cargo-ramp-legend { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; font-size: 10px;}
+.cargo-ramp-row { display: flex; align-items: center; gap: 6px; }
+.cargo-ramp-dot { width: 10px; height: 10px; border-radius: 2px; }

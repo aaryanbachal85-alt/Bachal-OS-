@@ -1,0 +1,24 @@
+{
+  "name": "bachal-os-",
+  "version": "1.0.0",
+  "description": "Welcome to Bachal's OS, a personal web-based desktop operating system built for the Hack Club WebOS Jam. Bachal's OS gives you a short about me kind of thing where you can learn his hobbies, and his dreams in life.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaryanbachal85-alt/Bachal-OS-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/aaryanbachal85-alt/Bachal-OS-/issues"
+  },
+  "homepage": "https://github.com/aaryanbachal85-alt/Bachal-OS-#readme",
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}

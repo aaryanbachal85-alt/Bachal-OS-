@@ -146,7 +146,8 @@ function initializeWindow(id) {
 function initializeIcon(id, screenId) {
   var icon = document.querySelector("#" + id);
   var screen = document.querySelector("#" + screenId);
-  icon.addEventListener("click", function() {
+  icon.addEventListener("click", function(e) {
+    e.stopPropagation();
     handleIconTap(icon, screen);
   });
 }
@@ -332,7 +333,7 @@ renderBookPage();
  var SIM_START_ZULU = 14 * 60;
  
  function getSimMinutes() {
-  var realElapsedMin = (Date.now() - SIM_START_REAL) / 6000; 
+  var realElapsedMin = (Date.now() - SIM_START_REAL) / 60000; 
   return Math.floor(SIM_START_ZULU + realElapsedMin * SIM_SPEED);
   }
 
@@ -418,6 +419,9 @@ renderBookPage();
   // --- Max flights for performance ---
   var MAX_FLIGHTS = 80;
 
+  // Active flights array
+  var flights = [];
+
 
   /* ============================================================
    * 3. FLIGHT FACTORY
@@ -494,7 +498,7 @@ renderBookPage();
     if (category === "ga") speed = 0.5 + Math.random() * 0.4;
 
     // Altitude
-    var speed = isArrival ? 5000 + Math.floor(Math.random() * 15000)
+    var altitude = isArrival ? 5000 + Math.floor(Math.random() * 15000)
               : 1000 + Math.floor(Math.random() * 6000);
     if (category === "cg") altitude = 500 + Math.floor(Math.random() * 2000);
     if (category === "medevac") altitude = 1000 + Math.floor(Math.random() * 4000);
@@ -593,5 +597,404 @@ renderBookPage();
     }
 
     setInterval(spawnFlight, 3000 + Math.random() * 5000);
-})
+
+  /* ============================================================
+   * 6. PHYSICS ENGINE — Polar coordinate updates
+   * ============================================================ */
+
+  var LAX_CENTER = { x: CANVAS_SIZE / 2, y: CANVAS_SIZE / 2 };
+
+  function updateFlightPhysics(flight, dtSimMin) {
+    if (!flight.active) return;
+
+    if (flight.category === "cg") {
+      flight.angle += 0.02 * dtSimMin; 
+      flight.distance = 50 + Math.sin(Date.now() / 5000) * 10;
+    polartoCartesian(flight)};
+    return;
+  }
+
+  // GA direct routing (simplified)
+  if(flight.category === "ga") {
+    var dx = LAX_CENTER.x - flight.x;
+    var dy = LAX_CENTER.y - flight.y; 
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist > 5) {
+      flight.angle = Math.atan2(dy, dx);
+      flight.distance = dist * NM_PER_PX;
+    }
+    polartoCartesian(flight);
+    return;
+  }
+
+  // Standard approach/departure
+  var deltaDist = (flight.targetDistance - flight.distance) * 0.03 * dtSimMin;
+  flight.distance += deltaDist;
+
+  // Smooth heading transition
+  var headingDiff = normalizeAngle(flight.heading - flight.angle);
+  flight.angle += headingDiff * 0.05 * dtSimMin;
+
+  polartoCartesian(flight);
+
+  // Check completion
+  if (flight.type === "arrival" && flight.distance < 6) {
+    flight.active = false; 
+    logEvent(flight.id + "landed on " + flight.runway);
+  } else if (flight.type === "departure " && flight.distance > 165) {
+    flight.active = false; 
+    logEvent(flight.id + "departed " + flight.runway);
+  }
+
+  function polarToCartesian(flight) {
+    var cx = LAX_CENTER.x, cy = LAX_CENTER.y;
+    flight.x = cx + Math.cos(flight.angle) * (flight.distance / NM_PER_PX);
+    fligt.y = cy + Math.sin(flight.angle) * (flight.distance / NM_PER_PX);
+  }
+
+  function normalizeAngle(a) {
+    while (a <= -Math.PI) a += 2 * Math.PI
+    while (a > Math.PI) a -= 2 * Math.PI
+    return a;
+  }
+
+  /* ============================================================
+   * 7. SEPARATION MONITOR — Persistent alerts
+   * ============================================================ */
+  var separationAlerts = [];
+
+  function checkSeparation(flights) {
+    var now = Date.now();
+    var newAlerts = [];
+
+    for (var i = 0; i < flights.length; i++) {
+      for (var j = i + 1; j < flights.length; j++) {
+        var f1 = flights[i], f2 = flights[j];
+        if (!f1.active || !f2.active) continue;
+
+        var dx = f1.x - f2.x, dy = f1.y - f2.y;
+        var lateralPx = Math.sqrt(dx*dx + dy*dy);
+        var lateralNM = lateralPx * NM_PER_PX;
+        var verticalFt = Math.abs(f1.altitude - f2.altitude);
+
+        if (lateralNM < SEP_LATERAL_NM || verticalFt < SEP_VERTICAL_FT) {
+          var key = f1.id + "|" + f2.id;
+          var existing = separationAlerts.find(function(a) { return a.key === key; });
+          if (existing) {
+            existing.lateral = lateralNM;
+            existing.vertical = verticalFt;
+            existing.since = existing.since || now;
+            newAlerts.push(existing);
+          } else {
+            newAlerts.push({
+              key: key,
+              f1: f1, f2: f2,
+              lateral: lateralNM,
+              vertical: verticalFt,
+              since: now
+            });
+          }
+        }
+      }
+    }
+    separationAlerts = newAlerts;
+    return separationAlerts;
+  }
+
+  function logEvent(msg) {
+    var el = document.querySelector("#radarLog"); 
+    if (el) {
+      var t = formatSimZulu(getSimMinutes());
+      el.innerHTML = '<div style="color:#888"[' + t + ']' + msg + '</div' + el.innerHTML;
+      if (el.children.length > 50) el.removeChild(el.lastChild);
+    }
+  }
+
+  /* ============================================================
+   * 8. RENDERER — Canvas 320x320
+   * ============================================================ */
+  var sweepAngle = -Math.PI / 2; 
+  var lastSweepNorth = false;
+  var audioCtx = null;
+  var radarInitialized = false;
+
+  function ensureAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === "suspended") audioCtx.resume();
+  }
+
+  function playRadarPing() {
+    ensureAudioContext();
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.12);
+  }
+
+  function renderRadar() {
+    var canvas = document.querySelector("#radarCanvas");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+    var cx = LAX_CENTER.x, cy = LAX_CENTER.y;
+
+    // Fade trail
+    ctx.fillStyle = "rgba(1, 3, 6, 0.12)";
+    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+    // Range rings (5, 10, 15, 20 NM)
+    ctx.strokeStyle = "rgba(0, 255, 205, 0.1)";
+    ctx.lineWidth = 1;
+    [5, 10, 15, 20].forEach(function(nm) {
+      var r = nm / 20 * RADAR_RADIUS;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0, 255, 204, 0.3)";
+      ctx.font = "8px monospace";
+      ctx.textAlign = "right"
+      ctx.fillText(nm + "NM", cx - r -2, cy +3);
+    });
+  
+  
+    // Crosshairs
+    ctx.strokeStyle = "rgba(0, 255, 205, 0.08)";
+    ctx.beginPath();
+    ctx.moveTo(cx, 0); ctx.lineTo(cx, CANVAS_SIZE);
+    ctx.moveTo(0, cy); ctx.lineTo(CANVAS_SIZE, cy);
+    ctx.stroke();
+
+    // Runway markings (simplified)
+    ctx.strokeStyle = "rgba(0, 255, 102, 0.4)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx - 60, cy - 30); ctx.lineTo(cx + 60, cy - 30);
+    ctx.moveTo(cx - 60, cy - 10); ctx.lineTo(cx + 60, cy -10);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx - 60, cy + 10); ctx.lineTo(cx + 60, cy + 10);
+    ctx.moveTo(cx - 60, cy + 30); ctx.lineTo(cx + 60, cy + 30);
+    ctx.stroke();
+
+    // LAX center
+    ctx.fillStyle = "#00ffcc";
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#00ffcc";
+    ctx.font = "9px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("LAX", cx, cy - 8);
+
+    // Draw separation alert lines
+    separationAlerts.forEach(function(alert) {
+    ctx.strokeStyle = "rgba(255, 0, 68, 0.8)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(alert.f1.x, alert.f1.y)
+    ctx.moveTo(alert.f2.x, alert.f2.y)
+    ctx.stroke();
+    ctx.setLineDash([])
+    ctx.fillStyle = "#ff0044";
+    ctx.font = "8px monospace";
+    ctx.fillText("SEP", (alert.f1.x + alert.f2.x)/2, (alert.f1.y + alert.f2.y)/2 - 4)
+    });
+
+    // Draw flights (sorted by zOrder)
+    var sorted = flights.filter(function(f) { return f.active; })
+    .sort(function(a, b) { return a.zOrder - b.zOrder; });
+
+    sorted.forEach(function(f) {
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = f.color;
+    ctx.fillStyle = f.color;
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.isHeavy ? 5 : 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Label
+    ctx.fillStyle = f.color;
+    ctx.font = "9px monospace";
+    ctx.textAlign = "left";
+    var label = (f.labelPrefix || "") + f.id;
+    ctx.fillText(label, f.x + 8, f.y - 4);
+    ctx.fillText(f.altitude.toLocaleString() + "ft", f.x + 8, f.y + 8);
+    if (f.isHeavy) ctx.fillText("HEAVY", f.x + 8, f.y + 20);
+    });
+
+    // Sweep line
+    sweepAngle += 0.008; // ~a.25 rotations. sec at 60 fps
+    if (sweepAngle > Math.PI * 2) sweepAngle -= Math.PI * 2;
+
+    // Ping when crossing north (0)
+    var crossedNorth = sweepAngle > 0 && sweepAngle < 0.008;
+    if (crossedNorth && !lastSweepNorth && radarInitialized) {
+    playRadarPing();
+    updateSimTimeDisplay();
+    } 
+    lastSweepNorth = crossedNorth;
+
+    ctx.strokeStyle = "#00ffcc";
+    ctx.lineWidth = 2;
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = "#00ffcc";
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(sweepAngle) * RADAR_RADIUS, cy + Math.sin(sweepAngle) * RADIUS);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+
+  function updateSimTimeDisplay() {
+    var el = document.querySelector("#simTimeDisplay");
+    if (el) el.textContent = "SIM " + formatSimZulu(getSimMinutes());
+  }
+
+  /* ============================================================
+   * 9. QUEUE UI — 4 Tabs: Arrivals / Departures / Alerts / All
+   * ============================================================ */
+  var currentQueueTab = "arrivals";
+
+  function updateQueueUI() {
+    var box = document.querySelector("#radarQueue");
+    if (!box) return;
+
+    var tabs = box.querySelector(".queue-tabs");
+    var content = box.querySelector(".queue-content");
+    if (!tabs || !content) return;
+
+    var arrivals = flights.filter(function(f) { return f.active && f.type === "arrival"; });
+    var departures = flights.filter(function(f) { return f.active && f.type === "departure"; });
+    var all = flights.filter(function(f) { return f.active; });
+
+    // Tab buttons
+    var tabData = [
+      { id: "arrivals", label: "ARRIVALS (" + arrivals.length + ")", count: arrivals.length },
+      { id: "departures", label: "DEPARTURES (" + departures.length + ")", count: departures.length }, 
+      { id: "alerts", label: "ALERTS (" + separationAlerts.length + ")", count: separationAlerts.length }
+    ];
+
+    tabs.innerHTML = tabData.map(function(t) {
+      return '<button class="queue-tab' + (t.id === currentQueueTab ? " active" : "") +
+             '" data-tab="' + t.id + '">' + t.label + '</button>';
+    }).join("");
+
+    // Re-bind tab clicks
+    tabs.querySelectorAll(".queue-tab").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        currentQueueTab = this.dataset.tab;
+        updateQueueUI();
+      });
+    });
+
+    // Content
+    var list = [];
+    if (currentQueueTab === "arrivals") list = arrivals;
+    else if (currentQueueTab === "departures") list = departures;
+    else if (currentQueueTab === "alerts") list = separationAlerts;
+    else list = all;
+
+    if (currentQueueTab === "alerts") {
+      content.innerHTML = list.length === 0
+        ? '<div class="queue-empty">No separation conflicts</div>'
+        : list.map(function(a) {
+            return '<div class="queue-item alert">' +
+              '<div class="queue-header"><span style="color:#ff0044">CONFLICT</span></div>' + 
+              '<div class="queue-details">' + a.f1.id + ' \u2194 ' + a.f2.id + '</div>' +
+              '<div class="queue-details">Lat: ' + a.lateral.toFixed(1) + 'NM | Vert: ' + a.vertical + 'ft</div>' +
+              '</div>';
+          }).join("");
+      } else {
+        content.innerHTML = list.length === 0 
+          ? '<div class="queue-empty">No traffic</div>'
+          : list.map(function(f) {
+              var ramp = f.cargoRamp ? ' <span style="color:' + f.cargoRamp.color + '">[' + f.cargoRamp.name + ']</span>' : '';
+              return '<div class="queue-item ' + f.type + '">' + '<div class="queue-header"><span>' + (f.labelPrefix || "") + f.id + '</span><span>' +f.aircraft + '</span></div' +
+              '<div class="queue-details">RWY: ' + f.runway + ramp + ' | ALT: ' + f.altitude.toLocaleString() + 'ft | SPD: ' + Math.round(f.speed * 150) + 'Kts | DIST: ' + Math.round(f.distance) + 'nm</div>' + '</div>';
+          }).join("");
+      }  
+    }
+  
+  /* ============================================================
+   * 10. ANIMATION LOOP
+   * ============================================================ */
+  var lastFrame = 0;
+
+  function animateRadar(ts) {
+    if (!lastFrame) lastFrame = ts;
+    var dtRealMs = ts - lastFrame;
+    lastFrame = ts;
+
+    // Convert to sim-minutes
+    var dtSimMin = (dtRealMs / 1000) * SIM_SPEED;
+
+    // Update physics
+    flights.forEach(function(f) { updateFlightPhysics(f, dtSimMin); });
+    flights = flights.filter(function(f) { return f.active; });
+
+    // Separation check
+    checkSeparation(flights);
+
+    // Render
+    renderRadar();
+
+    requestAnimationFrame(animateRadar);
+  }
+
+  /* ============================================================
+   * 11. WINDOW INTEGRATION
+   * ============================================================ */
+  function initRadarModule() {
+    if (radarInitialized) return;
+    radarInitialized = true;
+
+    // Initialize window/icon
+    initializeWindow("radar");
+    initializeIcon("radarIcon", "radar");
+
+    // Start animation when radar window first opens
+    var radarEl = document.querySelector("#radar");
+    if (radarEl) {
+      var observer = new MutationObserver(function() {
+        if (radarEl.style.display === "flex") {
+          animateRadar(performance.now());
+          observer.disconnect();
+        }
+      });
+      observer.observe(radarEl, { attributes: true, attributeFilter: ["style"] });
+    }
+
+    // Initial queue render
+    updateQueueUI();
+    updateSimTimeDisplay();
+  }
+
+  // Auto-init when DOM ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initRadarModule);
+  } else {
+    initRadarModule();
+  }
+
+  /* ============================================================
+   * 12. GLOBAL STATE (exposed for Terminal CLI)
+   * ============================================================ */
+  window.LAXRadar = {
+    getFlights: function() { return flights.filter(function(f) { return f.active; }); },
+    getAlerts: function() { return separationAlerts; },
+    getSimTime: function() { return formatSimZulu(getSimMinutes()); },
+    spawnTestFlight: function(cat) { flights.push(createFlight(cat || "major")); 
+  updateQueueUI(); }
+    };
+  
+})();
+
 

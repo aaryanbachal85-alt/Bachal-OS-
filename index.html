@@ -16,10 +16,18 @@
     <!-- Desktop Icons -->
     <div id="desktopApps" style="padding-top: 64px; padding-left: 16px; display: flex; flex-direction: column; gap: 8px;">
       
-      <!--Handbook Icon-->
+      <!-- Handbook Icon -->
       <div id="handbookIcon" style="text-align: center; padding: 16px; width: 120px; cursor: pointer;">
-      <img src="https://th.bing.com/th/id/OIP.keAWlTLP884zgAzrCXoDXQHaHa?w=201&h=201&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3" style="width: 100px; height: 100px; border-radius: 8px; margin: 0 auto 8px auto; background: #08101c; border: 1px solid #ffcc00; display: flex; align-items: center; justify-content: center; font-size: 24px;">
-      <span style="color: #ffffff; font-family: monospace; font-size: 16px !important; font-weight: bold; text-align: center; text-shadow: 1px 1px 3px #000; display: block;">Handbook</span>
+        <img src="https://th.bing.com/th/id/OIP.keAWlTLP884zgAzrCXoDXQHaHa?w=201&h=201&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3" style="width: 100px; height: 100px; border-radius: 8px; margin: 0 auto 8px auto; background: #08101c; border: 1px solid #ffcc00; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+        <span style="color: #ffffff; font-family: monospace; font-size: 16px !important; font-weight: bold; text-align: center; text-shadow: 1px 1px 3px #000; display: block;">Handbook</span>
+      </div>
+
+      <!-- Radar Icon (Sibling, not child) -->
+      <div id="radarIcon" style="text-align: center; padding: 16px; width: 120px; cursor: pointer;">
+        <div style="width: 48px; height: 48px; border-radius: 8px; margin: 0 auto 8px auto; background: #08101c; border: 1px solid #00ffcc; display: flex; align-items: center; justify-content: center; font-size: 24px;">📡</div>
+        <span style="color: #00ffcc; font-family: monospace; font-size: 14px; font-weight: bold; text-align: center; text-shadow: 1px 1px 3px #000; display: block;">Radar</span>
+      </div>
+
     </div>
 
     <!-- Welcome Window -->
@@ -71,19 +79,23 @@
       </div>  
     </div>
 
-    <!-- Travel Window -->
-    <div class="window" id="travel" style="top: calc(50% - 90px); left: calc(50% - 180px); display: none; width: 950px; height: 600px;">
-      
-    </div>
-
-    <!-- Badminton Window -->
-    <div class="window" id="badminton" style="top: calc(50% - 325px); left: calc(50% - 500px); display: none; width: 1000px; height: 650px;">
-      
-    </div>
-
-    <!-- Wallpaper Window -->
-    <div class="window" id="wallpaper" style="top: calc(50% - 300px); left: calc(50% - 475px); display: none; width: 950px; height: 600px;">
-      
+    <!-- Radar Window -->
+    <div class="window" id="radar" style="top: calc(50% - 200px); left: calc(50% - 200px); display: none; width: 600px; height: 450px; background: #080d1a;">
+      <div class="window-header" id="radarheader" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background-color: #111a2e; cursor: grab; user-select: none;">
+        <span style="color: #00ffcc; font-weight: bold; font-size: 12px;">RADAR // SOCAL_APPROACH</span>
+        <span id="simTimeDisplay" style="color: #00ff66; font-family: monospace; font-size: 11px;">SIM: 14: 00Z</span>
+        <button class="close-btn" id="radarclose" style="cursor: pointer; color: white; background: #ee0000; border: none; border-radius: 50%; width: 16px; height: 16px; text-align: center; line-height: 16px;">X</button>
+      </div>
+      <div class ="radar-layout" style="display: flex; gap: 10px; flex: 1; margin: 8px; background: #03070d; border-radius: 6px; border: 1px solid #00ffcc33; overflow: hidden;">
+        <canvas id="radarCanvas" width="320" height="320" style="background: #010306;"></canvas>
+        <div class="radar-controls" style="flex: 1; display: flex; gap: 10px; flex: 1; flex-direction: column; gap: 8px; padding: 8px; color: #e2e8f0;">
+          <div class="queue-box" id="radarQueue" style="flex: 1; background: #08101c; border: 1px solid #00ffcc33; border-radius: 4px; padding: 8px; overflow: hidden; display: flex; flex-direction: column; min-height: 0;">
+            <div class="queue-tabs" style="display: flex; gap: 2px; margin-bottom: 6px; border-bottom: 1px solid #00ffcc33; padding-bottom: 4px;"></div>
+            <div class="queue-content" style="flex: 1; overflow-y: auto; font-size: 11px; font-family: monospace;"></div>
+          </div>
+          <div id="radarLog" style="height: 80px; background: #020408; border: 1px solid #00ffcc22; padding: 6px; overflow-y: auto; color: #88a0c0; font-size: 10px; font-family: monospace;"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Script -->
