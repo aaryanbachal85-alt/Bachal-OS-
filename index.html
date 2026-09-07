@@ -34,6 +34,12 @@
       <span>Tower Control</span>
      </div>
 
+    <!--Terminal App-->
+    <div id="terminalIcon" class="terminal-icon">
+      <div class="terminal-icon-symbol"&gt;_></div>
+      <span>Terminal</span>  
+    </div>
+
   </div>
 
     <!-- Welcome Window -->
@@ -126,7 +132,7 @@
       <h3>ACTIVE FLIGHTS</h3>
       <div class="tower-filter-row">
         <button data-tower-filter="all">ALL</button>
-        <button data-tower-filter="arrivals">ARRIVALS</button>
+        <button data-tower-filter="arrival">ARRIVALS</button>
         <button data-tower-filter="departure">DEPARTURES</button>
       </div>
 
@@ -139,7 +145,7 @@
           Select an aircraft from the active-flight list.
         </div>
 
-        <div id="towerAssignmentsControls" hidden>
+        <div id="towerAssignmentControls" hidden>
           <label>
             Terminal
             <select id="towerTerminalSelect"></select>
@@ -164,7 +170,7 @@
             <button id="assignFlightButton">ASSIGN</button>
             <button id="holdFlightButton">HOLD</button>
             <button id="releaseFlightButton">RELEASE HOLD</button>
-            <button id="takeoffFightButton">CLEAR TAKEOFF</button>
+            <button id="takeoffFlightButton">CLEAR TAKEOFF</button>
             <button id="landingFlightButton">CLEAR LANDING</button>
           </div>
         </div>
@@ -173,9 +179,36 @@
         <div id="towerLog"></div>
       </section>
     </div>
+
+    <!--Terminal Window-->
+    <div class="window" id="terminal" style="top: (50% - 280px); left: calc(50% -360px); display: none; width: 720px; height: 560px;">
+      <div class ="window-header" id="terminalheader"></div>
+      <span>CLI ONLINE</span>
+      <button class="close-btn" id ="terminalClose">X</button>
+
+      <div class="terminal-body">
+        <div id="terminalOutput" class="terminal-output"></div>
+        <div>LAX WebOS Terminal</div>
+        <div>Type <strong>help</strong> for available commands.</div>
+      
+
+        <div class="terminal-input-row">
+          <span>uswer@lax-sys:~$</span>
+          <input
+          id="terminalInput"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          ria-label="Terminal command"
+        > 
+        </div>
+      </div>
+    </div>
+
+    
     
 
     <!-- Script -->
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
   </body>
 </html>

@@ -422,6 +422,52 @@ renderBookPage();
   // Active flights array
   var flights = [];
 
+  // KLAX public-airport layout. Runway use remains dynamic in real operations.
+  var LAX_AIRPORT = {
+    code: "KLAX",
+    runways: {
+      "24L": { reciprocal: "06R", side: "NORTH", lengthFt: 8926, operation: "ARRIVAL" },
+      "24R": { reciprocal: "06L", side: "NORTH", lengthFt: 10285, operation: "ARRIVAL" },
+      "25L": { reciprocal: "07R", side: "SOUTH", lengthFt: 12091, operation: "DEPARTURE" },
+      "25R": { reciprocal: "07L", side: "SOUTH", lengthFt: 11095, operation: "DEPARTURE" }
+    },
+    terminals: {
+      "Terminal 1": ["9", "10", "11A", "11B", "12A", "12B", "13", "14", "15", "16", "17", "18"],
+      "Terminal 2": ["21", "22A", "22B", "23A", "23B", "24A", "24B", "25A", "25B", "26", "27", "28"],
+      "Terminal 3": ["30A", "30B", "31A", "31B", "32A", "32B", "33", "34A", "34B", "35", "36", "37", "38", "39"],
+      "Terminal 4": ["40", "41", "42A", "42B", "43", "44", "45", "46A", "46B", "47A", "47B", "48A", "48B", "49A", "49B"],
+      "Terminal 5": ["50A", "50B", "51A", "51B", "52A", "52B", "53A", "53B", "54A", "54B", "55A", "55B", "56", "57", "58", "59"],
+      "Terminal 6": ["60A", "60B", "61A", "61B", "62A", "62B", "63", "64A", "64B", "65A", "65B", "66", "67", "68", "69A", "69B"],
+      "Terminal 7": ["70A", "70B", "71A", "71B", "72A", "72B", "73A", "73B", "74A", "74B", "75A", "75B", "76A", "76B", "77A", "77B"],
+      "Terminal 8": ["80", "81", "82", "83", "84", "85", "86", "87", "88"],
+      "TBIT": ["101", "102", "103", "104", "105", "106", "107", "108", "109A", "109B", "110A", "110B", "111A", "111B", "112A", "112B", "113", "114", "115", "116", "117", "118", "119", "150", "151", "152", "153", "154", "155", "156", "157", "201", "202", "203", "204", "205", "206", "207", "208", "209", "210", "211", "212", "213", "214", "215", "216", "217", "218", "219", "220", "221", "222", "223", "224", "225"]
+    },
+    airlineTerminals: {
+      WN: "Terminal 1", AS: "Terminal 6", DL: "Terminal 2", UA: "Terminal 7",
+      AA: "Terminal 4", B6: "Terminal 5", HA: "Terminal 6", NK: "Terminal 6",
+      BA: "TBIT", AF: "TBIT", LH: "TBIT", VS: "TBIT", NH: "TBIT", JL: "TBIT",
+      KE: "TBIT", OZ: "TBIT", CX: "TBIT", SQ: "TBIT", QF: "TBIT", EK: "TBIT",
+      QR: "TBIT", EY: "TBIT", TK: "TBIT", KL: "TBIT", AM: "TBIT", AV: "TBIT",
+      LA: "TBIT", CM: "TBIT", AC: "TBIT", NZ: "TBIT"
+    }
+  };
+
+  function chooseLaxRunway(isArrival, isHeavy) {
+    var choices = isArrival ? ["24L", "24R"] : ["25L", "25R"];
+    if (isHeavy) return isArrival ? "24R" : "25L";
+    return choices[Math.floor(Math.random() * choices.length)];
+  }
+
+  function chooseLaxTerminal(airline, category) {
+    if (category === "intl") return "TBIT";
+    return LAX_AIRPORT.airlineTerminals[airline] || "Terminal 1";
+  }
+
+  function chooseLaxGate(terminal) {
+    var terminalGates = LAX_AIRPORT.terminals[terminal] || [];
+    return terminalGates[Math.floor(Math.random() * terminalGates.length)] || null;
+  }
+
 
   /* ============================================================
    * 3. FLIGHT FACTORY
@@ -479,13 +525,10 @@ renderBookPage();
       cargoRamp = CARGO_RAMP_MAP[airline] || CARGO_RAMP_MAP.default;
     }
 
-    // Runway assignment (heavy preference)
-    var runway = null;
-    if (isArrival) {
-      runway = isHeavy ? "24R" : (Math.random() < 0.6 ? "24R" : "24L");
-    } else {
-      runway = isHeavy ? "25R" : (Math.random() < 0.6 ? "25R" : "25L");
-    }
+    // LAX runway and gate assignment. ATC can override these later.
+    var runway = chooseLaxRunway(isArrival, isHeavy);
+    var terminal = category === "cargo" ? "CARGO" : chooseLaxTerminal(airline, category);
+    var gate = category === "cargo" ? null : chooseLaxGate(terminal);
 
     // Initial polar positon
     var angle = Math.random() * Math.PI * 2;
@@ -521,6 +564,11 @@ renderBookPage();
       // Resources
       runway: runway,
       cargoRamp: cargoRamp,
+      terminal: terminal,
+      gate: gate,
+      clearance: "UNASSIGNED",
+      holding: false,
+      atcStatus: "TRACKING",
       //Seperation
       squawk: (1000 + Math.floor(Math.random() * 7000)).toString(8),
       // Visual
@@ -1027,9 +1075,365 @@ renderBookPage();
     spawnTestFlight: function (cat) {
       flights.push(createFlight(cat || "major"));
       updateQueueUI();
+    },
+    refreshQueue: function () {
+      updateQueueUI();
+    },
+    updateFlight: function (flightId, changes) {
+      var flight = flights.find(function (item) { return item.id === flightId; });
+      if (!flight) return null;
+      Object.assign(flight, changes);
+      updateQueueUI();
+      return flight;
     }
   };
 
 })();
 
+/* ============================================================
+ * ATC TOWER CONTROL MODULE
+ * ============================================================ */
+
+(function () {
+  "use strict";
+
+  var selectedFlightId = null;
+  var currentFilter = "all";
+
+  var runwayState = {
+    "24L": { open: true, side: "NORTH" },
+    "24R": { open: true, side: "NORTH" },
+    "25L": { open: true, side: "SOUTH" },
+    "25R": { open: true, side: "SOUTH" },
+  };
+
+  var termianlGates = {
+    "Terminal 1": [
+      "9", "10", "11A", "11B", "12A", "12B", "13", "14", "15", "16", "17", "18"
+    ],
+    "Terminal 2": [
+      "21", "22A", "22B", "23A", "23B", "24A", "24B", "25A", "25B", "26", "27", "28"
+    ],
+    "Terminal 3": ["30A", "30B", "31A", "31B", "32A", "32B", "33", "34A", "34B", "35", "36", "37", "38", "39"      
+    ],
+    "Terminal 4": ["40", "41", "42A", "42B", "43", "44", "45", "46A", "46B", "47A", "47B", "48A", "48B", "49A", "49B"      
+    ],
+    "Terminal 5": ["50A", "50B", "51A", "51B", "52A", "52B", "53A", "53B", "54A", "54B", "55A", "55B", "56", "57", "58", "59"
+    ],
+    "Terminal 6": ["60A", "60B", "61A", "61B", "62A", "62B", "63", "64A", "64B", "65A", "65B", "66", "67", "68", "69A", "69B"
+    ],
+    "Terminal 7": ["70A", "70B", "71A", "71B", "72A", "72B", "73A", "73B", "74A", "74B", "75A", "75B", "76A", "76B", "77A", "77B"
+    ],
+    "Terminal 8": ["80", "81", "82", "83", "84", "85", "86", "87", "88"
+    ],
+    TBIT: ["101", "102", "103", "104", "105", "106", "107", "108",
+      "109A", "109B",
+      "110A", "110B",
+      "111A", "111B",
+      "112A", "112B",
+      "113", "114", "115", "116", "117", "118", "119",
+      "150", "151", "152", "153", "154", "155", "156", "157",
+      "201", "202", "203", "204", "205", "206", "207", "208",
+      "209", "210", "211", "212", "213", "214", "215", "216",
+      "217", "218", "219", "220", "221", "222", "223", "224",
+      "225"
+    ]
+  };
+
+  function getFlights() {
+    if (!windo.LAXRadar) return [];
+
+    return window.LAXRadar.getFlights().filter(function (flight) {
+      return flight.active  
+    });
+  }
+
+  function getSelectedFlight() {
+    return getFlights().find(function (flight) {
+      return flight.id === selectedFlightId;
+    });
+  }
+
+  function getCallsign(flight) {
+    return (flight.labelPrefix || "") + (flight.id || "UNKNOWN");
+  }
+
+  function getRunwaysFor(flight) {
+    return ["24L", "24R", "25L", "25R"] 
+  }
+
+  function renderRunways () {
+    var container = document.querySelector("#runwayStatusGrid");
+
+    if (!container) return;
+
+    container.innerHTML = Object.keys(runwayState).map(function (runway){
+      var state = runwayState[runway];
+
+      return (
+        '<button class="runway=status ' +
+        (state.open ? "open" : "closed") +
+        '" data-runway="' +
+        runway +
+        '">' +
+        runway +
+        "<br>" +
+        (state.open ? "OPEN" : "CLOSED") +
+        "</button>"
+      );
+    }).join("");
+  }
+
+  function renderFlightQueue() {
+    var container = document.querySelector("#towerQueueList");
+
+    if (!container) return;
+    
+    var flights = getFlights().filter(function (flight) {
+      return currentFilter === "all" || flight.type === currentFilter;
+  });
+
+  if (flights.length === 0) {
+    container.innerHTML = '<div style="padding: 10px; color: #64748b;">No active flights</div>'
+    return;
+  }
+
+  container.innerHTML = flights.map(function (flight) {
+    var selected = flight.id === selectedFlightId;
+    return (
+      '<div class="tower-flight-row' + 
+      (selected ? " selected" : "") +
+      '">' +
+      '<div class="tower-flight-header">' +
+      getCallsign(flight) +
+      "</span>" +
+      "<span>" +
+        (flight.aircraft || "UNKNOWN") +
+        "</span>" +
+        "</div>" +
+        '<div class="tower-flight-details">' +
+        flight.type.toUpperCase() +
+        " | ALT: " +
+        (flight.altitude || 0).toLocaleString() +
+        "ft<br>" +
+        "RUNWAY: " +
+        (flight.runway || "NONE") +
+        " | TERMINAL: " +
+        (flight.terminal || "NONE") +
+        " | GATE: " +
+        (flight.gate || "NONE") +
+        "<br>STATUS: " +
+        (flight.atcStatus || "TRACKING") +
+        "</div>" +
+        "</div>"
+    );
+  }).join("");
+ }
+
+ function renderTerminalOptions(flight) {
+  var terminalSelect = document.querySelector("#towerTerminalSelect");
+  var gateSelect = document.querySelector("#towerGateSelect");
+
+  terminalSelect.innerHTML = Object.keys(terminalGates).map(function (terminal) {
+    return ('<option value="' + terminal + '">' + (flight.terminal === terminal ? " selected" : "") + terminal + "</option>"
+    );
+  }).join("");
+
+  renderGateOptions(flight);
+ }
+
+ function renderGateOptions(flight) {
+  var terminalSelect = document.querySelector("#towerTerminalSelect");
+  var gateSelect = document.querySelector("#towerGateSelect");
+  
+  var gates = terminalGates[terminalSelect.value] || [];
+
+  gatesSelect.innerHTML = gates.map(function (gate) {
+    return (
+      '<option value="' + gate + '">' + (flight.gate === gate ? " selected" : "") + gate + "</option>"
+    );
+  }).join("");
+ }
+
+ function renderClearanceOptions(flight) {
+  var select = document.querySelector("#towerClearanceSelect");
+
+  var options = flight.type === "arrival" ? ["UNASSIGNED", "APPROACH", "HOLD", "CLEARED_TO_LAND"
+
+  ]
+  : ["UNASSIGNED", "TAXI", "HOLD", "CLEARED_FOR_TAKEOFF"];
+
+  select.innerHTML = options.map(function (option) {
+    return (
+      '<option value="' + option + '"' + (flight.clearance === option ? " selected" : "") + ">" + option.replace(/_/g, " ") + "</option>"
+    );
+  }).join("");
+ }
+
+ function renderSelectedFlight () {
+  var panel = document.querySelector("towerSelectedFlight");
+  var controls = document.querySelector("#towerAssignmentControls");
+  var flight = getSelectedFlight();
+
+  if (!flight) {
+    panel.textContent = "Select an aircraft from the active flight list.";
+    controls.hidden = true;
+    return;
+  }
+
+  controls.hidden = false;
+
+  panel.innerHTML = "<strong style=\"color:" + (flight.color || "#00ffcc") +
+      "\">" +
+      getCallsign(flight) +
+      "</strong><br>" +
+      "Aircraft: " +
+      (flight.aircraft || "UNKNOWN") +
+      "<br>Type: " +
+      flight.type.toUpperCase() +
+      "<br>Altitude: " +
+      (flight.altitude || 0).toLocaleString() +
+      "ft<br>Status: " +
+      (flight.atcStatus || "TRACKING");
+
+    renderTerminalOptions(flight);
+    renderRunwayOptions(flight);
+    renderClearanceOptions(flight);
+ }
+
+ function renderTower () {
+  renderRunways();
+  renderFlightQueue();
+  renderSelectedFlight();
+ }
+
+ function updateSelectedFlight(changes) {
+  var flight = getSelectedFlight();
+
+  if (!flight || !window.LAXRadar.updateFlight) return;
+
+  window.LAXRadar.updateFlight(flight.id, changes);
+  renderTower();
+ }
+
+ function assignFlight() {
+  var flight = getSelectedFlight();
+
+  if (!flight) return;
+
+  var runway = document.querySelector("#towerRunwaySelect").value;
+
+  if (!runwayState[runway].open) {
+    return;
+  }
+
+  updateSelectedFlight({
+    terminal: document.querySelector("#towerTerminalSelect").value,
+    gate: document.querySelector("#towerGateSelect").value,
+    runway: runway,
+    clearance: document.querySelector("#towerClearanceSelect").value,
+    atcStatus: "ASSIGNED"
+  });
+ }
+
+ function holdFlight() {
+  updateSelectedFlight({
+    holding: true,
+    clearance: "HOLD",
+    atcStatus: "HOLDING"
+  });
+ }
+
+ function releaseFlight() {
+  updateSelectedFlight({
+    holding: false,
+    clearance: "APPROACH",
+    atcStatus: "APPROACHING"
+  });
+ }
+
+ function clearTakeoff() {
+  var flight = getSelectedFlight();
+
+  if (!flight || flight.type !== "departure") return;
+
+  updateSelectedFlight({
+    clearance: "CLEARED_FOR_TAKEOFF",
+    atcStatus: "TAKEOFF_CLEARED"
+  });
+ }
+
+ function clearLanding() {
+  var flight = getSelectedFlight();
+  
+  if (!flight || flight.type !== "arrival") return;
+
+  updateSelectedFlight({
+    clearance: "CLEARED_TO_LAND",
+    atcStatus: "LANDING_CLEARED"
+  });
+ }
+
+ initializeWindow("runwayControl")
+ initializeIcon("towerIcon", "runwayControl");
+
+ document.querySelector("#towerIcon").addEventListener("click", renderTower)
+
+ document.addEventListener("click", function (event){
+  var flightRow = event.target.closest("[data-flight-id]");
+  var runwayButton = event.target.closest("[data-runway]");
+  var filterButton = event.target.closest("[data-tower-filter]");
+
+  if (flightRow) {
+    selectedFlightId = flightRow.dataset.flightId;
+    renderTower();
+    return;
+  }
+
+  if (runwayButton) {
+    var runway = runwayButton.dataset.runway;
+    runwayState[runway].open = !runwayState[runway].open;
+    renderTower();
+    return;
+  }
+
+  if (filterButton) {
+    currentFilter = filterButton.dataset.towerFilter;
+    renderTower();
+  }
+ });
+
+ document.querySelector("#towerTerminalSelect").addEventListener(
+  "change",
+  function () {
+    var flight = getSelectedFlight();
+    if (flight) renderGateOptions(flight);
+  }
+ );
+
+ document.querySelector("assignFlightButton")
+  .addEventListener("click", assignFlight);
+
+document.querySelector("#holdFlightButton")
+  .addEventListener("click", releaseFlight);
+
+document.querySelector("#releaseFlightButton")
+  .addEventListener("click", releaseFlight);
+
+document.querySelector("#takeoffFlightButton")
+  .addEventListener("click", clearTakeoff)
+  
+document.querySelector("#landingFlightButton")
+  .addEventListener("click", clearLanding);
+
+setInterval(function () {
+  var windowElement = document.querySelector("#runwayControl");
+
+  if (windowElement && windowElement.style.display === "flex") {
+    renderTower();
+  }
+}, 1000);
+})();
+
+/* ========== TERMINAL CLI MODULE ========== */
 
